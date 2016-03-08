@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        p.hidden{
+            display: none;
+        }
+        p.visible{
+            display: block;
+        }
+		h2.hidden{
+            display: none;
+        }
+        h2.visible{
+            display: block;
+        }
+	</style>
+	<script src="js/phaser.js"></script>
+	<!--<script src="test.js"></script>-->
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+	<script src="http://cdn.socket.io/socket.io-1.4.0.js"></script>
+	<script>
+		var socket = io.connect('http://localhost:3000/')
+		var SessionCode;
+		var playerCount = 0; //sets from server
+		var UserName = ""
+		var Code
+		//The things still dissapear when the code is false
+		function JoinSession()
+		{
+			document.getElementById("Screen1").className = "hidden"
+			document.getElementById("JoinServer").className = "hidden"
+			UserName = document.getElementById("name").value;
+			Code = document.getElementById("code").value;
+			var Data = {
+				dataName: UserName,
+				dataCode: Code
+			};
+			socket.emit('join session', Data);
+		}
+		
+		socket.on('user recieve code', function(data){
+			SessionCode = data.Code;
+		});
+		
+		socket.on("displayName", function(data) {
+			if(SessionCode == data.Code)
+			{
+				playersInGame = data.List;
+				alert(playersInGame)
+				playerCount++;
+				document.getElementById("display").innerHTML = data.List;
+			}
+		});
+		
+		socket.on("Bad Code", function(data){
+			alert("Code is invalid")
+			document.getElementById("Screen1").className = "visible"
+			document.getElementById("JoinServer").className = "visible"
+		});
+//-------------------------------------------------------------------------------------		
+//-------------------------------------------------------------------------------------			
+		var turn = 0;
+		var playersInGame = new Array();
+		var playersHealth = new Array(); //array of current health values
+		var defend = false; //determines if next turn will be defended	
+		var AOE = []//Array of Enemies
+		var GameState;
+		var Clickable = false;
+		
+		socket.on("game starter", function(data){
+		console.log("this is first data.code")
+		console.log(data.Code)
+			for(i=0;i<playersInGame.length;i++)
+			{
+				playersHealth.push(100);
+			}
+			if(data.Code == SessionCode)
+			{
+				document.getElementById("display").innerHTML = data['Units']
+				document.getElementById("Screen2").className = "visible";
+				document.getElementById("AtkButton").className = "visible"
+				document.getElementById("DefButton").className = "visible"
+				document.getElementById("UpgButton").className = "visible"
+				document.getElementById("HealButton").className = "visible"
+				updateEnemies(data['Units'], data['Tier']);
+			}
+		});
+		
+		
+		function updateEnemies(UnitArray,UnitTier)//This will generate the original list of enemies and send the correct values to all the timers.
+		{
+			var HoldOutput = ""
+			var Output = ""
+			document.getElementById("display").innerHTML = HoldOutput
+			var AmountOfEnemiesBeingSpawnedIn = UnitArray.length//Amount Of Enemies the player wants to fight 
+			for(g=0;g<playersInGame.length;g++)
+			{
+				Output = Output + '<p className = "visible"onclick="SelectThisPerson(' + "\'playersInGame[g]\'" +','+ g +')">' + playersInGame[g] + "<br>" +playersHealth[g] +"</p>";//Generates the html for the list below.
+				document.getElementById("PartyMem").innerHTML = Output//Changes the value of Outputs
+			}
+			
+			Output = ""
+			for(g=0;g<AmountOfEnemiesBeingSpawnedIn;g++)//Generates the list of enemies and variables
+			{	
+				Output = Output + '<p className = "visible"onclick="SelectThisPerson(' + UnitArray[g] +','+ g +')">' + UnitArray[g] +"</p>";//Generates the html for the list below.
+				document.getElementById("display").innerHTML = Output//Changes the value of Outputs
+			}
+			
+		}
+		
+		function SelectThisPerson(Name, Position)
+		{
+			if(Clickable == true)
+			{
+				if(GameState == "Attack")
+				{
+					var Data = {
+						place:Position,
+						code:SessionCode,
+						action:GameState,
+						name:UserName
+					}
+					socket.emit("player update", Data)
+					GameState = ""
+					document.getElementById("ActionText").innerHTML = "";
+					document.getElementById("AtkButton").className = "hidden"
+					document.getElementById("DefButton").className = "hidden"
+					document.getElementById("UpgButton").className = "hidden"
+					document.getElementById("HealButton").className = "hidden"
+					Clickable = false;
+				}
+				if(GameState == "Heal")
+				{
+					var Per = playersInGame[Position]
+					var Data = {
+						place:Per,
+						code:SessionCode,
+						action:GameState,
+						name:UserName
+					}
+					socket.emit("player update", Data)
+					GameState = ""
+					document.getElementById("ActionText").innerHTML = "";
+					document.getElementById("AtkButton").className = "hidden"
+					document.getElementById("DefButton").className = "hidden"
+					document.getElementById("UpgButton").className = "hidden"
+					document.getElementById("HealButton").className = "hidden"
+					Clickable = false;
+					
+				}
+			}
+		}
+		
+		function playerAttack() //Player attacks enemy unit
+		{	
+			Clickable = true;
+			GameState = "Attack"
+			document.getElementById("AtkButton").className = "hidden"
+			document.getElementById("DefButton").className = "hidden"
+			document.getElementById("UpgButton").className = "hidden"
+			document.getElementById("HealButton").className = "hidden"
+			document.getElementById("ActionText").innerHTML = "Who are you going to attack?"
+			//hostUnitsHealth[unit] -= playersAttack[player];
+		}
+
+		function healPlayer() //healingPlayer heals healedPlayer by healingPlayer's heal value
+		{	
+			Clickable = true;
+			GameState = "Heal"
+			document.getElementById("AtkButton").className = "hidden"
+			document.getElementById("DefButton").className = "hidden"
+			document.getElementById("UpgButton").className = "hidden"
+			document.getElementById("HealButton").className = "hidden"
+			document.getElementById("ActionText").innerHTML = "Who are you going to Heal?"
+			//playersHealth[healedPlayer] += playersHeal[healingPlayer];
+		}
+
+		function playerDefend() //setheals defend to true for 1 turn (MAKE SURE TO TURN defend OFF AFTER EACH TURN)
+		{
+		    defend = true;
+			var data = {
+				action:'defend',
+				code:SessionCode,
+				name:UserName
+			}
+			socket.emit("player update",data)
+			document.getElementById("AtkButton").className = "hidden"
+			document.getElementById("DefButton").className = "hidden"
+			document.getElementById("UpgButton").className = "hidden"
+			document.getElementById("HealButton").className = "hidden"
+			//defend = true;
+		}
+
+		function upgradeAbility(player, ability) //Attack = 1, Heal = 2, Defend = 3
+		{
+			if(ability == 1) //Upgrading attack adds 5 attack
+			{
+				playersAttack[player] += 5
+			}
+			else if(ability == 2) //Upgrading heal increases heals by 5
+			{
+				playersHeal[player] +=5;
+			}
+			else if(ability == 3)//Upgrading defend adds 5% defend
+			{ 
+				if(playersDefend[player] < .75)
+				{
+					playersDefend[player] += .05
+				}
+				else playersDefend[player] = .75
+			}
+		}
+		
+	</script>
+</head>
+<body>
+<h2 id="JoinServer" class="visible">JOIN SERVER</h2>
+<form>
+<p id="Screen1" class="visible">
+  Name:<br>
+  <input type="text" id="name"><br>
+  Session Code:<br>
+  <input type="text" id="code">
+  <input type="button" value="Submit" onClick="JoinSession()">
+  </p>
+</form>
+<p id="display"></p> 
+<!-- This is battle form -->
+<form>
+<p id="Screen2" class="hidden">
+	<p id="AtkButton" class="hidden">
+	<input type="button" value="Attack" onClick="playerAttack()">
+	</p>
+	<p id="DefButton" class="hidden">
+	<input type="button" value="Defend" onClick="playerDefend()">
+	</p>
+	<p id="UpgButton" class="hidden">
+	<input type="button" value="Upgrade" onClick="">
+	</p>
+	<p id="HealButton" class="hidden">
+	<input type="button" value="Heal" onClick="healPlayer()">
+	</p>
+</p>
+</form>
+<p id="display"></p> 
+<p id="ActionText"></p>
+<p id="PartyMem"></p>
+</body>
+ <!--<button id="button1" onclick="changebutton1()">Click me to attack</button> </form>-->
+</html>
+
+
