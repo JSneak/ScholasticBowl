@@ -1,0 +1,8 @@
+socket.on('Bad Code', function (data) {
+
+		alert("turn in valid code");
+})
+
+socket.on('recieve code', function(data){
+	Code = data.Code;
+})

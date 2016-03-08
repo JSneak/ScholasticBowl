@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!--<script src="/socket.io/socket.io.js"></script>  -->
+  <script src="socket.io-1.4.0.js"></script>
+  <!--<script src="/socket.io/socket.io.js"></script>-->
+<script>
+ var socket = io.connect("http://localhost:8080/")
+function ObtainCode()
+{
+var Name = document.getElementById("userName").value;
+
+socket.emit('generate session', Name);
+}
+
+socket.on('recieve code',function (data) {
+	alert(data.Code);
+});
+</script>
+
+</head>
+
+<body>
+
+<form>
+<input type="text" id="userName">
+<input type="button" onClick="ObtainCode()" value="Get Code" >
+
+</form>
+</body>
+
+</html>

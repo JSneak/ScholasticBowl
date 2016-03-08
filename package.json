@@ -1,0 +1,11 @@
+{
+  "name": "Rework",
+  "version": "0.0.0",
+  "description": "Scholastic Test",
+  "dependencies": {
+    "body-parser": "latest",
+    "express": "^4.10.2",
+    "socket.io": "^1.4.5"
+  },
+  "author": "Sean Kim"
+}
