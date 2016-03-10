@@ -17,10 +17,11 @@
 			var socket = io.connect('http://localhost:3000/')
 			function ObtainCode()
 			{
-				var Name = document.getElementById("Name").value;
-				document.getElementById("Screen1").className = "hidden"
+				document.getElementById("Screen1").className = "hidden";
 				document.getElementById("button1").onclick = function(){StartGame();};
 				document.getElementById("button1").value = "Start the game";
+				document.getElementById("Useful").innerHTML = "People in Session";
+				var Name = document.getElementById("Name").value;
 				socket.emit('generate session', Name);
 			}
 
@@ -36,6 +37,12 @@
 					document.getElementById("display").innerHTML = data.List;
 				}
 			});
+			
+			function StartGame()
+			{
+				alert("Hi")
+				socket.emit("Start Session", data);
+			}
 //Make the host side to see who clicks first and reset it.
 		</script>
 		
@@ -44,13 +51,13 @@
 	<body>
 	<form>
 	<p id="codeSpace"></p>
+	<p id="Useful"></p>
 	<p id="display"></p>
 	<p id="Screen1" class="visible">
 	Name <br>
-		<input type="text" id='Name' > <br>
-	<br><br>
+		<input type="text" id='Name'> <br>
 	</p>	
-	<p id="displayScreen" class="visible">
 	<input type="button" value="Make Session" id="button1" onclick="ObtainCode()">
+	<p id="displayScreen" class="visible">
 	</p>
 </html>

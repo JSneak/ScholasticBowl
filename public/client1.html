@@ -28,7 +28,7 @@
 		function JoinSession()
 		{
 			document.getElementById("Screen1").className = "hidden"
-			document.getElementById("JoinServer").className = "hidden"
+			document.getElementById("JoinServer").innerHTML = "People in Session"
 			UserName = document.getElementById("name").value;
 			Code = document.getElementById("code").value;
 			var Data = {
@@ -46,7 +46,6 @@
 			if(SessionCode == data.Code)
 			{
 				playersInGame = data.List;
-				alert(playersInGame)
 				playerCount++;
 				document.getElementById("display").innerHTML = data.List;
 			}

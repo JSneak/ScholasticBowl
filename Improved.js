@@ -22,32 +22,32 @@ var NumberOfGuests = 0;
 io.on('connection', function (socket) {
 	
 socket.on("generate session", function(Name){
-		console.log("Test 1 + " + Name);
+		//console.log("Test 1 + " + Name);
 		genRand();
-		console.log("Test 2 = " + genCode);
+		//console.log("Test 2 = " + genCode);
 		HostSession[NumberOfHosts] = HostClass();
 		HostSession[NumberOfHosts].HostCode = genCode;
 		HostSession[NumberOfHosts].HostSessionName = Name;
-		console.log("Test 3 = " + HostSession[NumberOfHosts].HostCode);
+		//console.log("Test 3 = " + HostSession[NumberOfHosts].HostCode);
 		socket.emit('recieve code', {
 			Code: genCode
 		});
-		console.log("Test 4");
-		console.log(HostSession.length + " All the people in host Session");
+		//console.log("Test 4");
+		//console.log(HostSession.length + " All the people in host Session");
 		NumberOfHosts++;
 	});
 	
-	socket.on("join session", function(Code){//Checks the code
+socket.on("join session", function(Code){//Checks the code
 		ValidCode = false;
 		var GivenName = Code.dataName;
 		var GivenCode = Code.dataCode;
 		var GroupList = [];
-		console.log("JS Test 1");
+		//console.log("JS Test 1");
 		if(NumberOfGuests != 0)
 		{
 			for(i=0;i<=NumberOfGuests;i++)
 			{
-				console.log(Code);
+				//console.log(Code);
 				if(HostSession[i].HostCode == GivenCode)
 				{
 					ValidCode = true;
@@ -57,7 +57,7 @@ socket.on("generate session", function(Name){
 			}
 		}else{
 				//NumberOfGuests++
-				console.log(Code);
+				//console.log(Code);
 				if(HostSession[0].HostCode == GivenCode)
 				{
 					ValidCode = true;
@@ -72,13 +72,13 @@ socket.on("generate session", function(Name){
 
 			if(ValidCode == true)
 			{
-				console.log(NumberOfGuests + "This is ");
+				//console.log(NumberOfGuests + "This is ");
 				UserSession[NumberOfGuests] = UserClass();
 				UserSession[NumberOfGuests].UserName = GivenName;
 				UserSession[NumberOfGuests].UserResponse = "";
 				UserSession[NumberOfGuests].UserCode = GivenCode;
-				console.log(UserSession[NumberOfGuests]);
-				console.log(NumberOfGuests + " This is number of Guests");
+				//console.log(UserSession[NumberOfGuests]);
+				//console.log(NumberOfGuests + " This is number of Guests");
 				if(NumberOfGuests != 0)
 				{
 					for(i=0;i<=NumberOfGuests;i++)
@@ -87,8 +87,8 @@ socket.on("generate session", function(Name){
 						{
 							GroupList.push(UserSession[i].UserName);
 							//GroupList[i] = UserSession[i].UserName;
-							console.log(i + " This is place in array");
-							console.log(UserSession.length + " This is length of the UserSession");
+							//console.log(i + " This is place in array");
+							//console.log(UserSession.length + " This is length of the UserSession");
 						}
 					}
 				}else{
@@ -97,12 +97,12 @@ socket.on("generate session", function(Name){
 							GroupList.push(UserSession[0].UserName);
 							//GroupList[i] = UserSession[i].UserName;
 							//console.log(0 + " This is the first iteration");
-							console.log(UserSession.length + " This is length of the UserSession");
+							//console.log(UserSession.length + " This is length of the UserSession");
 							//console.log(UserSession.length);
 						}
 					}
 				
-				console.log(GroupList + " Everyone in the group list array");
+				//console.log(GroupList + " Everyone in the group list array");
 				socket.emit('user recieve code', {
 					Code: GivenCode
 				});
@@ -118,6 +118,11 @@ socket.on("generate session", function(Name){
 					});
 				 }
 	});
+	
+socket.on("Start Session", function(Data){
+	
+	
+});
 });
 	
 	
@@ -128,8 +133,8 @@ function genRand()	{
 	{
 		for(i=0;i<NumberOfHosts;i++)
 		{
-			console.log(genCode);
-			console.log(HostSession[i]);
+			//console.log(genCode);
+			//console.log(HostSession[i]);
 			if(HostSession[i].HostCode == genCode)
 			{
 				UniqueCode = false;
