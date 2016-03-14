@@ -2,7 +2,8 @@ module.exports = function(){
 	
 	return{
 		HostSessionName:"",
-		HostCode:""
+		HostCode:"",
+		NumberOfTeams:0
 	}
 	
 }

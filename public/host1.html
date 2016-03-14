@@ -22,7 +22,12 @@
 				document.getElementById("button1").value = "Start the game";
 				document.getElementById("Useful").innerHTML = "People in Session";
 				var Name = document.getElementById("Name").value;
-				socket.emit('generate session', Name);
+				var Team = document.getElementById("NumOfTeams").value;
+				var Data = {
+					hostName: Name,
+					hostTeam: Team
+				}
+				socket.emit('generate session', Data);
 			}
 
 			socket.on('recieve code',function (data) {
@@ -40,7 +45,7 @@
 			
 			function StartGame()
 			{
-				alert("Hi")
+				var data = UserCode;
 				socket.emit("Start Session", data);
 			}
 //Make the host side to see who clicks first and reset it.
@@ -56,6 +61,8 @@
 	<p id="Screen1" class="visible">
 	Name <br>
 		<input type="text" id='Name'> <br>
+	How Many Teams <br>
+		<input type="number" id="NumOfTeams"> <br>
 	</p>	
 	<input type="button" value="Make Session" id="button1" onclick="ObtainCode()">
 	<p id="displayScreen" class="visible">

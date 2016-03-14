@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<title> Client </title>
     <style>
         p.hidden{
             display: none;
@@ -22,18 +23,22 @@
 		var socket = io.connect('http://localhost:3000/')
 		var SessionCode;
 		var playerCount = 0; //sets from server
-		var UserName = ""
-		var Code
+		var UserName = "";
+		var Code;
+		var Team;
 		//The things still dissapear when the code is false
 		function JoinSession()
 		{
 			document.getElementById("Screen1").className = "hidden"
+			document.getElementById("Screen2").className = "hidden"
 			document.getElementById("JoinServer").innerHTML = "People in Session"
 			UserName = document.getElementById("name").value;
 			Code = document.getElementById("code").value;
+			Team = document.getElementById("teamNum").value;
 			var Data = {
 				dataName: UserName,
-				dataCode: Code
+				dataCode: Code,
+				dataTeam: Team
 			};
 			socket.emit('join session', Data);
 		}
@@ -56,6 +61,27 @@
 			document.getElementById("Screen1").className = "visible"
 			document.getElementById("JoinServer").className = "visible"
 		});
+		
+		socket.on("start session", function(data) {
+			if(SessionCode = data.Code)
+			{
+			document.getElementById("Screen2").class = "visible";
+			document.getElementById("Submit").onclick = function(){Buzz()}
+			}
+		});
+		
+		socket.on("restrict", function(data) {
+			if(SessionCode = data.Code)
+			{
+			
+			}
+		});
+		
+		function Buzz()
+		{
+		
+		socket.emit("buzz event", Data)
+		}
 //-------------------------------------------------------------------------------------		
 //-------------------------------------------------------------------------------------			
 //Make a form tag for the button
@@ -68,9 +94,13 @@
   Name:<br>
   <input type="text" id="name"><br>
   Session Code:<br>
-  <input type="text" id="code">
-  <input type="button" value="Submit" onClick="JoinSession()">
+  <input type="text" id="code"><br>
+  Team Number:<br>
+  <input type="number" id="teamNum" min="0"><br>
   </p>
+ <p id="Screen2" class="visible">
+   <input type="button" value="Submit" onClick="JoinSession()">
+ </p>
 </form>
 <p id="display"></p> 
 <!-- This is battle form -->

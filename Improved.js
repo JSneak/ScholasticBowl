@@ -21,13 +21,16 @@ var NumberOfGuests = 0;
 
 io.on('connection', function (socket) {
 	
-socket.on("generate session", function(Name){
+socket.on("generate session", function(Data){
 		//console.log("Test 1 + " + Name);
 		genRand();
 		//console.log("Test 2 = " + genCode);
+		var Name = Data.hostName;
+		var Team = Data.hostTeam;
 		HostSession[NumberOfHosts] = HostClass();
 		HostSession[NumberOfHosts].HostCode = genCode;
 		HostSession[NumberOfHosts].HostSessionName = Name;
+		HostSession[NumberOfHosts].NumberOfTeams = Team;
 		//console.log("Test 3 = " + HostSession[NumberOfHosts].HostCode);
 		socket.emit('recieve code', {
 			Code: genCode
@@ -41,6 +44,7 @@ socket.on("join session", function(Code){//Checks the code
 		ValidCode = false;
 		var GivenName = Code.dataName;
 		var GivenCode = Code.dataCode;
+		var GivenTeam = Code.dataTeam;
 		var GroupList = [];
 		//console.log("JS Test 1");
 		if(NumberOfGuests != 0)
@@ -77,6 +81,7 @@ socket.on("join session", function(Code){//Checks the code
 				UserSession[NumberOfGuests].UserName = GivenName;
 				UserSession[NumberOfGuests].UserResponse = "";
 				UserSession[NumberOfGuests].UserCode = GivenCode;
+				UserSession[NumberOfGuests].TeamNumber = GivenTeam;
 				//console.log(UserSession[NumberOfGuests]);
 				//console.log(NumberOfGuests + " This is number of Guests");
 				if(NumberOfGuests != 0)
@@ -105,11 +110,11 @@ socket.on("join session", function(Code){//Checks the code
 				//console.log(GroupList + " Everyone in the group list array");
 				socket.emit('user recieve code', {
 					Code: GivenCode
-				});
+				});//returns back to the caller
 				io.sockets.emit('displayName', {
 					Code:GivenCode,
 					List:GroupList
-				});
+				});//returns to everyone
 				NumberOfGuests++;
 			}else{
 					ValidCode = false;
@@ -118,11 +123,18 @@ socket.on("join session", function(Code){//Checks the code
 					});
 				 }
 	});
+
 	
+	//Start Session doesn't work at all Trace all the way back
 socket.on("Start Session", function(Data){
-	
-	
+	console.log("What");
+	var GivenCode = Data.UserCode;
+	io.sockets.emit('start session', {
+					Code:GivenCode
+				});
 });
+
+
 });
 	
 	
