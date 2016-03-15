@@ -70,6 +70,7 @@
 				}
 				PermantOutput += "</tr>"
 				document.getElementById("display").innerHTML = "<tr><table>"+PermantOutput+"</table>";
+				//http://stackoverflow.com/questions/14949210/dynamically-update-a-table-using-javascript
 			}
 			
 			socket.on("someone buzzed", function(data) {
@@ -80,12 +81,18 @@
 			});
 			function CorrectReset()
 			{
-			
+				var Data = {
+				code:UserCode
+				}
+				socket.emit("Correct Reset", Data);
 			}
 			
 			function WrongReset()
 			{
-			
+				var Data = {
+				code:UserCode	
+				}
+				socket.emit("Wrong Reset", Data);
 			}
 //Make the host side to see who clicks first and reset it.
 		</script>
