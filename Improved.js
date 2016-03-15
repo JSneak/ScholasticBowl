@@ -136,7 +136,12 @@ socket.on("Start Session", function(Data){
 
 socket.on("buzz event", function(Data){
 	
-	
+	io.sockets.emit('restrict', {
+		Code:Data.userCode
+	});
+	io.sockets.emit('someone buzzed', {
+		Code:Data.userCode	
+	});
 });
 
 });
