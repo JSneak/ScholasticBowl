@@ -18,6 +18,28 @@
 	</style>
 	<!--<script src="test.js"></script>-->
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+</head>
+<body>
+<h2 id="JoinServer" class="visible">JOIN SERVER</h2>
+<form>
+<p id="Screen1" class="visible">
+  Name:<br>
+  <input type="text" id="name"><br>
+  Session Code:<br>
+  <input type="text" id="code"><br>
+  Team Number:<br>
+  <input type="number" id="teamNum" min="0"><br>
+  </p>
+ <p id="Screen2" class="visible">
+   <input type="button" value="Submit" onClick="JoinSession()">
+ </p>
+</form>
+<p id="display"></p> 
+<!-- This is battle form -->
+
+<p id="display"></p> 
+
+
 	<script src="http://cdn.socket.io/socket.io-1.4.0.js"></script>
 	<script>
 		var socket = io.connect('http://localhost:3000/')
@@ -63,9 +85,10 @@
 		});
 		
 		socket.on("start session", function(data) {
+			alert(data.Code);
 			if(SessionCode = data.Code)
 			{
-			document.getElementById("Screen2").class = "visible";
+			document.getElementById("Screen2").className = "visible";
 			document.getElementById("Submit").onclick = function(){Buzz()}
 			}
 		});
@@ -86,28 +109,7 @@
 //-------------------------------------------------------------------------------------			
 //Make a form tag for the button
 	</script>
-</head>
-<body>
-<h2 id="JoinServer" class="visible">JOIN SERVER</h2>
-<form>
-<p id="Screen1" class="visible">
-  Name:<br>
-  <input type="text" id="name"><br>
-  Session Code:<br>
-  <input type="text" id="code"><br>
-  Team Number:<br>
-  <input type="number" id="teamNum" min="0"><br>
-  </p>
- <p id="Screen2" class="visible">
-   <input type="button" value="Submit" onClick="JoinSession()">
- </p>
-</form>
-<p id="display"></p> 
-<!-- This is battle form -->
-
-<p id="display"></p> 
 </body>
- <!--<button id="button1" onclick="changebutton1()">Click me to attack</button> </form>-->
 </html>
 
 

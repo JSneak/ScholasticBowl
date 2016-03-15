@@ -17,9 +17,11 @@
 			var socket = io.connect('http://localhost:3000/')
 			function ObtainCode()
 			{
+				document.getElementById("Screen2").className = "visible"
+				//document.getElementById("Button1").onclick = function() { StartGame() }
 				document.getElementById("Screen1").className = "hidden";
-				document.getElementById("button1").onclick = function(){StartGame();};
-				document.getElementById("button1").value = "Start the game";
+				//alert("?")
+				//document.getElementById("Button1").value = "Start the game";
 				document.getElementById("Useful").innerHTML = "People in Session";
 				var Name = document.getElementById("Name").value;
 				var Team = document.getElementById("NumOfTeams").value;
@@ -45,7 +47,10 @@
 			
 			function StartGame()
 			{
-				var data = UserCode;
+				var data = {
+				code:UserCode
+				}
+				console.log(data);
 				socket.emit("Start Session", data);
 			}
 //Make the host side to see who clicks first and reset it.
@@ -63,8 +68,11 @@
 		<input type="text" id='Name'> <br>
 	How Many Teams <br>
 		<input type="number" id="NumOfTeams"> <br>
-	</p>	
-	<input type="button" value="Make Session" id="button1" onclick="ObtainCode()">
+		<input type="button" value="Make Session" id="Button1" onclick="ObtainCode()">
+	</p>
+	<p id="Screen2" class="hidden">
+	<input type="button" value="Start" id="Button2" onclick="StartGame()">
+	</p>
 	<p id="displayScreen" class="visible">
 	</p>
 </html>
