@@ -9,12 +9,18 @@
         p.visible{
             display: block;
         }
+		table, th, td {
+		border: 1px solid black;
+		}
 		</style>
 		<script src="http://cdn.socket.io/socket.io-1.4.0.js"></script>
 		<script>
 			var PlayersInLobby= 0;
 			var UserCode;
 			var socket = io.connect('http://localhost:3000/')
+			var Name 
+			var Team
+			var PermantOutput="";
 			function ObtainCode()
 			{
 				document.getElementById("Screen2").className = "visible"
@@ -23,8 +29,8 @@
 				//alert("?")
 				//document.getElementById("Button1").value = "Start the game";
 				document.getElementById("Useful").innerHTML = "People in Session";
-				var Name = document.getElementById("Name").value;
-				var Team = document.getElementById("NumOfTeams").value;
+				Name = document.getElementById("Name").value;
+				Team = document.getElementById("NumOfTeams").value;
 				var Data = {
 					hostName: Name,
 					hostTeam: Team
@@ -52,6 +58,34 @@
 				}
 				console.log(data);
 				socket.emit("Start Session", data);
+				document.getElementById("Button2").onclick = function(){CorrectReset()}
+				document.getElementById("Screen2").className = "hidden"
+				//document.getElementById("Screen3").className = "visible"
+				document.getElementById("Button2").value = "Right Answer"
+				document.getElementById("codeSpace").innerHTML = ""
+				document.getElementById("Useful").innerHTML =""
+				for(i=1;i<=Team;i++)
+				{
+					PermantOutput += "<th>Team"+ i + "</th>";
+				}
+				PermantOutput += "</tr>"
+				document.getElementById("display").innerHTML = "<tr><table>"+PermantOutput+"</table>";
+			}
+			
+			socket.on("someone buzzed", function(data) {
+				if(UserCode == data.Code)
+				{
+				
+				}
+			});
+			function CorrectReset()
+			{
+			
+			}
+			
+			function WrongReset()
+			{
+			
 			}
 //Make the host side to see who clicks first and reset it.
 		</script>
@@ -72,6 +106,9 @@
 	</p>
 	<p id="Screen2" class="hidden">
 	<input type="button" value="Start" id="Button2" onclick="StartGame()">
+	</p>
+	<p id="Screen3" class="hidden">
+	<input type="button" id="Button3" value="Wrong Answer" onClick="WrongReset()">
 	</p>
 	<p id="displayScreen" class="visible">
 	</p>

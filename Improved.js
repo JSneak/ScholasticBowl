@@ -134,9 +134,13 @@ socket.on("Start Session", function(Data){
 				});
 });
 
+socket.on("buzz event", function(Data){
+	
+	
+});
 
 });
-	
+
 	
 	
 function genRand()	{
