@@ -76,7 +76,8 @@
 			socket.on("someone buzzed", function(data) {
 				if(UserCode == data.Code)
 				{
-				
+					document.getElementById("Screen2").className = "visible";
+					document.getElementById("Screen3").className = "visible";
 				}
 			});
 			function CorrectReset()
