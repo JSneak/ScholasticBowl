@@ -24,6 +24,7 @@
 		var UserName = "";
 		var Code;
 		var Team;
+		var BuzzState = 0;
 		//The things still dissapear when the code is false
 		function JoinSession()
 		{
@@ -74,11 +75,27 @@
 		socket.on("restrict", function(data) {
 			if(SessionCode = data.Code)
 			{
-			
+				BuzzState = 1;
+				document.getElementById("Submit").value = "Someone else is answering"
+				document.getElementById("Submit").onclick = function(){PlaceHolder()}
 			}
 		});
-		function Buzz()
 		
+		socket.on("unrestrict", function(data) {
+			if(SessionCode = data.Code)
+			{
+				BuzzState = 0;
+				document.getElementById("Submit").value = "Buzz"
+				document.getElementById("Submit").onclick = function(){Buzz()}
+			}
+		})
+		
+		function PlaceHolder()
+		{
+			//Just to temp a function
+		}
+		
+		function Buzz()
 		{
 		var Data = {
 			userCode: SessionCode,
