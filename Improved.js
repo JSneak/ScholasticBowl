@@ -22,21 +22,19 @@ var NumberOfGuests = 0;
 io.on('connection', function (socket) {
 	
 socket.on("generate session", function(Data){
-		//console.log("Test 1 + " + Name);
 		genRand();
-		//console.log("Test 2 = " + genCode);
+
 		var Name = Data.hostName;
 		var Team = Data.hostTeam;
 		HostSession[NumberOfHosts] = HostClass();
 		HostSession[NumberOfHosts].HostCode = genCode;
 		HostSession[NumberOfHosts].HostSessionName = Name;
 		HostSession[NumberOfHosts].NumberOfTeams = Team;
-		console.log("Test 3 = " + HostSession[NumberOfHosts].HostCode);
 		socket.emit('recieve code', {
 			Code: genCode
 		});
-		//console.log("Test 4");
-		//console.log(HostSession.length + " All the people in host Session");
+		console.log(HostSession[NumberOfHosts].HostCode + ", " + HostSession[NumberOfHosts].HostSessionName + "  <-- New Session");
+		console.log(HostSession.length + " <-- Number of People in the Session");
 		NumberOfHosts++;
 	});
 	
@@ -46,7 +44,6 @@ socket.on("join session", function(Code){//Checks the code
 		var GivenCode = Code.dataCode;
 		var GivenTeam = Code.dataTeam;
 		var GroupList = [];
-		//console.log("JS Test 1");
 		if(NumberOfGuests != 0)
 		{
 			for(i=0;i<=NumberOfGuests;i++)
@@ -82,6 +79,7 @@ socket.on("join session", function(Code){//Checks the code
 				UserSession[NumberOfGuests].UserResponse = "";
 				UserSession[NumberOfGuests].UserCode = GivenCode;
 				UserSession[NumberOfGuests].TeamNumber = GivenTeam;
+				console.log(UserSession[NumberOfGuests].UserName + ", " + UserSession[NumberOfGuests].UserCode + " <----- Players Info");
 				//console.log(UserSession[NumberOfGuests]);
 				//console.log(NumberOfGuests + " This is number of Guests");
 				if(NumberOfGuests != 0)
@@ -122,6 +120,9 @@ socket.on("join session", function(Code){//Checks the code
 					result: false
 					});
 				 }
+				 
+		
+		
 	});
 
 	
@@ -141,6 +142,18 @@ socket.on("buzz event", function(Data){
 	});
 	io.sockets.emit('someone buzzed', {
 		Code:Data.userCode	
+	});
+});
+
+socket.on("Correct Reset", function(Data){
+	io.sockets.emit('unrestrict', {
+		Code:Data.code
+	});
+});
+
+socket.on("Wrong Reset", function(Data){
+	io.sockets.emit('unrestrict', {
+		Code:Data.code
 	});
 });
 

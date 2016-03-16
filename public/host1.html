@@ -80,16 +80,22 @@
 					document.getElementById("Screen3").className = "visible";
 				}
 			});
-			function CorrectReset()
+
+			function CorrectReset()//hide stuff
 			{
+				document.getElementById("Screen2").className = "hidden"
+				document.getElementById("Screen3").className = "hidden"
 				var Data = {
 				code:UserCode
 				}
 				socket.emit("Correct Reset", Data);
+				
 			}
 			
 			function WrongReset()
 			{
+				document.getElementById("Screen2").className = "hidden"
+				document.getElementById("Screen3").className = "hidden"
 				var Data = {
 				code:UserCode	
 				}
