@@ -128,7 +128,6 @@ socket.on("join session", function(Code){//Checks the code
 	
 //Start Session doesn't work at all Trace all the way back
 socket.on("Start Session", function(Data){
-	console.log(Data.code);
 	var GivenCode = Data.code;
 	io.sockets.emit('start session', {
 					Code:GivenCode

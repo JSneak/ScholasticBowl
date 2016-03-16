@@ -64,13 +64,31 @@
 				document.getElementById("Button2").value = "Right Answer"
 				document.getElementById("codeSpace").innerHTML = ""
 				document.getElementById("Useful").innerHTML =""
+				//for(i=1;i<=Team;i++)
+				//{
+					//PermantOutput += "<th>Team"+ i + "</th>";
+				//}
+				//PermantOutput += "</tr>"
+				//document.getElementById("display").innerHTML = "<tr><table>"+PermantOutput+"</table>";
+				//http://stackoverflow.com/questions/14949210/dynamically-update-a-table-using-javascript
+			}
+			
+			function UpdateTable()
+			{
+				document.getElementById("Useful").innerHTML =""
 				for(i=1;i<=Team;i++)
 				{
 					PermantOutput += "<th>Team"+ i + "</th>";
 				}
 				PermantOutput += "</tr>"
-				document.getElementById("display").innerHTML = "<tr><table>"+PermantOutput+"</table>";
-				//http://stackoverflow.com/questions/14949210/dynamically-update-a-table-using-javascript
+				document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
+				for(i=0;i<Team;i++)
+				{
+					
+				}
+			}
+			
+			
 			}
 			
 			socket.on("someone buzzed", function(data) {
