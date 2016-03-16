@@ -21,8 +21,16 @@
 			var Name 
 			var Team
 			var PermantOutput="";
+			var TeamPoints = [];
+			var CurrentTeam;
 			function ObtainCode()
 			{
+				Team = document.getElementById("NumOfTeams").value;
+				for(i=0;i<Team;i++)
+				{
+					TeamPoints[i] = 0;
+				}
+				console.log(TeamPoints);
 				document.getElementById("Screen2").className = "visible"
 				//document.getElementById("Button1").onclick = function() { StartGame() }
 				document.getElementById("Screen1").className = "hidden";
@@ -62,8 +70,9 @@
 				document.getElementById("Screen2").className = "hidden"
 				//document.getElementById("Screen3").className = "visible"
 				document.getElementById("Button2").value = "Right Answer"
-				document.getElementById("codeSpace").innerHTML = ""
-				document.getElementById("Useful").innerHTML =""
+				UpdateScore();
+				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
+				document.getElementById("display").innerHTML =""
 				//for(i=1;i<=Team;i++)
 				//{
 					//PermantOutput += "<th>Team"+ i + "</th>";
@@ -88,12 +97,23 @@
 				}
 			}
 			
-			
+			function UpdateScore()
+			{
+			var Output =  "";
+				for(i=1;i<=Team;i++)
+				{
+					Output += "Team " + i + ": " + TeamPoints[i-1] + "<br>"
+				}
+				document.getElementById("codeSpace").innerHTML = Output
 			}
+			
 			
 			socket.on("someone buzzed", function(data) {
 				if(UserCode == data.Code)
 				{
+					CurrentTeam = data.PlayerTeam;
+					document.getElementById("Useful").innerHTML = ""
+					document.getElementById("display").innerHTML = data.PlayerName +" from Team " + data.PlayerTeam + " buzzed in."; 
 					document.getElementById("Screen2").className = "visible";
 					document.getElementById("Screen3").className = "visible";
 				}
@@ -101,6 +121,10 @@
 
 			function CorrectReset()//hide stuff
 			{
+				TeamPoints[CurrentTeam-1]++;
+				UpdateScore();
+				document.getElementById("display").innerHTML = ""; 
+				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
 				document.getElementById("Screen3").className = "hidden"
 				var Data = {
@@ -112,12 +136,28 @@
 			
 			function WrongReset()
 			{
+				document.getElementById("display").innerHTML = ""; 
+				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
 				document.getElementById("Screen3").className = "hidden"
 				var Data = {
 				code:UserCode	
 				}
 				socket.emit("Wrong Reset", Data);
+			}
+			
+			function EndSession()
+			{
+				document.getElementById("Screen1").className = "visible"
+				document.getElementById("Button2").value ="Start";
+				document.getElementById("Button2").onclick = function({StartGame()})
+				document.getElementById("Screen2").className = "hidden"
+				document.getElementById("Screen3").className = "hidden"
+				var Data = {
+				code:UserCode;
+				}
+				socket.emit("End Session", Data);
+			
 			}
 //Make the host side to see who clicks first and reset it.
 		</script>
@@ -141,6 +181,7 @@
 	</p>
 	<p id="Screen3" class="hidden">
 	<input type="button" id="Button3" value="Wrong Answer" onClick="WrongReset()">
+	<input type="button" value="End Session" id="EndButton" onClick="EndSession()">
 	</p>
 	<p id="displayScreen" class="visible">
 	</p>

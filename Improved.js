@@ -140,7 +140,9 @@ socket.on("buzz event", function(Data){
 		Code:Data.userCode
 	});
 	io.sockets.emit('someone buzzed', {
-		Code:Data.userCode	
+		Code:Data.userCode,
+		PlayerName:Data.userName,
+		PlayerTeam:Data.userTeam
 	});
 });
 
@@ -154,6 +156,19 @@ socket.on("Wrong Reset", function(Data){
 	io.sockets.emit('unrestrict', {
 		Code:Data.code
 	});
+});
+
+socket.on("End Session", function(Data){
+	io.sockets.emit('disconnect', {
+		Code:Data.UserCode
+	});
+	for(i=0;i<NumberOfGuests;i++)
+	{
+		if(Data.UserCode == UserSession[NumberOfGuests].UserCode)
+		{
+			array.splice(UserSession, NumberOfGuests);
+		}
+	}
 });
 
 });
