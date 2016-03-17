@@ -79,6 +79,7 @@ socket.on("join session", function(Code){//Checks the code
 				UserSession[NumberOfGuests].UserResponse = "";
 				UserSession[NumberOfGuests].UserCode = GivenCode;
 				UserSession[NumberOfGuests].TeamNumber = GivenTeam;
+				console.log(NumberOfGuests + " <--- Number of People in the array");
 				console.log(UserSession[NumberOfGuests].UserName + ", " + UserSession[NumberOfGuests].UserCode + " <----- Players Info");
 				//console.log(UserSession[NumberOfGuests]);
 				//console.log(NumberOfGuests + " This is number of Guests");
@@ -159,16 +160,36 @@ socket.on("Wrong Reset", function(Data){
 });
 
 socket.on("End Session", function(Data){
-	io.sockets.emit('disconnect', {
-		Code:Data.UserCode
-	});
+	var Temp = 0;
+	var GivenCode = Data.codea;
+	console.log(GivenCode +" <--- Started the End of World Initiative");
 	for(i=0;i<NumberOfGuests;i++)
 	{
-		if(Data.UserCode == UserSession[NumberOfGuests].UserCode)
+		console.log("Love of God, Help");
+		if(GivenCode == UserSession[i].UserCode)
 		{
-			array.splice(UserSession, NumberOfGuests);
+			console.log(UserSession[i].UserName + " Is being terminated");
+			UserSession.splice(i, 1);
+			Temp++;
+			console.log(UserSession[i].UserName + " If different, target has been terminated");
 		}
 	}
+	NumberOfGuests = NumberOfGuests - Temp;
+	
+	for(i=0;i<NumberOfHosts;i++)
+	{
+		if(GivenCode == HostSession[i].HostCode)
+		{
+			console.log(HostSession[i].HostSessionName + " Is being terminated");
+			HostSession.splice(i, 1);
+			console.log(HostSession[i].HostSessionName + " If different, target has been terminated ")
+			NumberOfHosts--;
+		}
+	}
+	console.log("Does it get here?");
+	io.sockets.emit('disconnect', {
+		Code:GivenCode
+	});
 });
 
 });

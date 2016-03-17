@@ -73,6 +73,7 @@
 				UpdateScore();
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("display").innerHTML =""
+				document.getElementById("Screen4").className = "visible"
 				//for(i=1;i<=Team;i++)
 				//{
 					//PermantOutput += "<th>Team"+ i + "</th>";
@@ -116,6 +117,7 @@
 					document.getElementById("display").innerHTML = data.PlayerName +" from Team " + data.PlayerTeam + " buzzed in."; 
 					document.getElementById("Screen2").className = "visible";
 					document.getElementById("Screen3").className = "visible";
+					document.getElementById("Screen4").className = "hidden"
 				}
 			});
 
@@ -127,6 +129,7 @@
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
 				document.getElementById("Screen3").className = "hidden"
+				document.getElementById("Screen4").className = "visible"
 				var Data = {
 				code:UserCode
 				}
@@ -140,6 +143,7 @@
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
 				document.getElementById("Screen3").className = "hidden"
+				document.getElementById("Screen4").className = "visible"
 				var Data = {
 				code:UserCode	
 				}
@@ -148,15 +152,19 @@
 			
 			function EndSession()
 			{
+				document.getElementById("codeSpace").innerHTML = ""
+				document.getElementById("display").innerHTML = ""
 				document.getElementById("Screen1").className = "visible"
 				document.getElementById("Button2").value ="Start";
-				document.getElementById("Button2").onclick = function({StartGame()})
+				document.getElementById("Button2").onclick = function(){StartGame()}
 				document.getElementById("Screen2").className = "hidden"
 				document.getElementById("Screen3").className = "hidden"
-				var Data = {
-				code:UserCode;
+				document.getElementById("Screen4").className = "hidden"
+				document.getElementById("Useful").innerHTML = ""
+				var data = {
+				codea:UserCode
 				}
-				socket.emit("End Session", Data);
+				socket.emit("End Session", data);
 			
 			}
 //Make the host side to see who clicks first and reset it.
@@ -181,6 +189,8 @@
 	</p>
 	<p id="Screen3" class="hidden">
 	<input type="button" id="Button3" value="Wrong Answer" onClick="WrongReset()">
+	</p>
+	<p id="Screen4" class="hidden">
 	<input type="button" value="End Session" id="EndButton" onClick="EndSession()">
 	</p>
 	<p id="displayScreen" class="visible">
