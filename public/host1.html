@@ -26,24 +26,22 @@
 			function ObtainCode()
 			{
 				Team = document.getElementById("NumOfTeams").value;
-				for(i=0;i<Team;i++)
-				{
-					TeamPoints[i] = 0;
-				}
-				console.log(TeamPoints);
-				document.getElementById("Screen2").className = "visible"
-				//document.getElementById("Button1").onclick = function() { StartGame() }
-				document.getElementById("Screen1").className = "hidden";
-				//alert("?")
-				//document.getElementById("Button1").value = "Start the game";
-				document.getElementById("Useful").innerHTML = "People in Session";
 				Name = document.getElementById("Name").value;
-				Team = document.getElementById("NumOfTeams").value;
-				var Data = {
-					hostName: Name,
-					hostTeam: Team
-				}
-				socket.emit('generate session', Data);
+					for(i=0;i<Team;i++)
+					{
+						TeamPoints[i] = 0;
+					}
+					console.log(TeamPoints);
+					document.getElementById("Screen2").className = "visible"
+					document.getElementById("Useful").innerHTML = "People in Session";
+					var Data = {
+						hostName: Name,
+						hostTeam: Team
+					}
+					document.getElementById("Name").value = "";
+					document.getElementById("NumOfTeams").value = "";
+					socket.emit('generate session', Data);
+						
 			}
 
 			socket.on('recieve code',function (data) {

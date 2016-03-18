@@ -40,36 +40,35 @@ socket.on("generate session", function(Data){
 	
 socket.on("join session", function(Code){//Checks the code
 		ValidCode = false;
-		var GivenName = Code.dataName;
-		var GivenCode = Code.dataCode;
-		var GivenTeam = Code.dataTeam;
 		var GroupList = [];
 		if(NumberOfGuests != 0)
 		{
-			for(i=0;i<=NumberOfGuests;i++)
-			{
-				//console.log(Code);
-				if(HostSession[i].HostCode == GivenCode)
+				for(i=0;i<=NumberOfGuests;i++)
 				{
-					ValidCode = true;
-					
-					break;
+					if(HostSession[i].HostCode == GivenCode)
+					{
+						ValidCode = true;
+						break;
+					}
 				}
-			}
+		
 		}else{
-				//NumberOfGuests++
-				//console.log(Code);
+				var GivenName = Code.dataName;
+				var GivenCode = Code.dataCode;
+				var GivenTeam = Code.dataTeam;
+			if(HostSession.length != 0)
+			{
 				if(HostSession[0].HostCode == GivenCode)
 				{
 					ValidCode = true;
 					
-				}else{
-					ValidCode = false;
-					socket.emit('Bad Code', {
-					result: false
+				}
+			}else{console.log("Step 2");
+				socket.emit('Bad Code',{
+					result:false
 					});
-				}	
 			}
+		}
 
 			if(ValidCode == true)
 			{
@@ -90,19 +89,12 @@ socket.on("join session", function(Code){//Checks the code
 						if(UserSession[i].UserCode == GivenCode)
 						{
 							GroupList.push(UserSession[i].UserName);
-							//GroupList[i] = UserSession[i].UserName;
-							//console.log(i + " This is place in array");
-							//console.log(UserSession.length + " This is length of the UserSession");
 						}
 					}
 				}else{
 						if(UserSession[0].UserCode == GivenCode)
 						{
 							GroupList.push(UserSession[0].UserName);
-							//GroupList[i] = UserSession[i].UserName;
-							//console.log(0 + " This is the first iteration");
-							//console.log(UserSession.length + " This is length of the UserSession");
-							//console.log(UserSession.length);
 						}
 					}
 				
@@ -118,7 +110,7 @@ socket.on("join session", function(Code){//Checks the code
 			}else{
 					ValidCode = false;
 					socket.emit('Bad Code', {
-					result: false
+					result:false
 					});
 				 }
 				 
