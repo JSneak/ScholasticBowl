@@ -161,18 +161,20 @@ socket.on("Wrong Reset", function(Data){
 
 socket.on("End Session", function(Data){
 	var Temp = 0;
+	var TempArray = [];
 	var GivenCode = Data.codea;
-	console.log(GivenCode +" <--- Started the End of World Initiative");
 	for(i=0;i<NumberOfGuests;i++)
 	{
-		console.log("Love of God, Help");
 		if(GivenCode == UserSession[i].UserCode)
 		{
-			console.log(UserSession[i].UserName + " Is being terminated");
-			UserSession.splice(i, 1);
+			TempArray.push(i);
 			Temp++;
-			console.log(UserSession[i].UserName + " If different, target has been terminated");
 		}
+	}
+	for(i=TempArray.length;i>0;i--)
+	{
+		var Space = TempArray[i-1];
+		UserSession.splice(Space,1);
 	}
 	NumberOfGuests = NumberOfGuests - Temp;
 	
@@ -180,13 +182,10 @@ socket.on("End Session", function(Data){
 	{
 		if(GivenCode == HostSession[i].HostCode)
 		{
-			console.log(HostSession[i].HostSessionName + " Is being terminated");
 			HostSession.splice(i, 1);
-			console.log(HostSession[i].HostSessionName + " If different, target has been terminated ")
 			NumberOfHosts--;
 		}
 	}
-	console.log("Does it get here?");
 	io.sockets.emit('disconnect', {
 		Code:GivenCode
 	});
