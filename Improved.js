@@ -217,9 +217,6 @@ function send404Response(response){
 
 app.use(express.static(__dirname + '/public'));
 
-/* app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-}); */
-server.listen(process.env.PORT || 3000, function () {
+server.listen(/*process.env.PORT || */3000, function () {
   console.log('Server listening at port %d 3000');
 });
