@@ -21,41 +21,15 @@ var NumberOfGuests = 0;
 
 io.on('connection', function (socket) {
 
-socket.on('adduser', function(username){//should pass the username and code
-	// store the username in the socket session for this client
-	socket.username = username;
-	// store the room name in the socket session for this client
-	socket.room = 'room1';//Room names should be code integer so you can compare the integer that the students input 
-	// add the client's username to the global list
-	usernames[username] = username;
-	// send client to room 1
-	socket.join('room1');//room id instead of room1
-	// echo to room 1 that a person has connected to their room
-	//socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-	//socket.emit('updaterooms', rooms, 'room1');
-	});
-	
-socket.on('disconnect', function(Data){
-	// remove the username from global usernames list
-	delete usernames[socket.username];
-	socket.leave(socket.room);
-	});
-
-
-	
 socket.on("Create Session", function(Data){
 		genRand();
 		var Name = Data.hostName;
 		var Team = Data.hostTeam;
 		socket.username = Name;
 		socket.room = genCode;
-		//usernames['username'] = Name;
 		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host"});
 		Rooms.push(genCode);
 		socket.join(genCode);
-		console.log("Below are the Rooms");
-		console.log(Rooms);
-		console.log(usernames);
 		socket.emit('recieve code', {
 			Code: genCode
 		});
@@ -65,13 +39,14 @@ socket.on("join session", function(Code){//Checks the code
 		ValidCode = false;
 		var GivenName = Code.dataName;
 		var GivenCode = Code.dataCode;
-		console.log(GivenCode + " <-- Code");
 		var GivenTeam = Code.dataTeam;//Implement Later
 		var GroupList = [];
+		
 		for(i=0;i<Rooms.length;i++)
 		{
 			if(GivenCode == Rooms[i])
 			{
+				NumberOfGuests++;
 				ValidCode = true;
 				socket.room = Rooms[i];
 				socket.username = GivenName;
@@ -80,13 +55,13 @@ socket.on("join session", function(Code){//Checks the code
 				socket.join(Rooms[i]);
 				if(NumberOfGuests != 0)
 				{
-					for(i=0;i<=NumberOfGuests;i++)
+					for(j=0;j<=NumberOfGuests;j++)
 					{
-						if(usernames[i]['code'] == GivenCode)
+						if(usernames[j]['code'] == GivenCode)
 						{
-							if(usernames[i]['rank'] != "Host")
+							if(usernames[j]['rank'] != "Host")
 							{
-							GroupList.push(usernames[i]['userName']);
+							GroupList.push(usernames[j]['userName']);
 							}
 						}
 					}
@@ -101,10 +76,10 @@ socket.on("join session", function(Code){//Checks the code
 					Code:GivenCode,
 					List:GroupList
 				});//returns to everyone
-				NumberOfGuests++;
+
 			}
-			console.log(usernames);
 		}
+		console.log(usernames);
 		if(ValidCode == false)
 		{
 			socket.emit('Bad Code', {
@@ -147,14 +122,31 @@ socket.on("Wrong Reset", function(Data){
 });
 
 socket.on("End Session", function(Data){
-	for(i=0;i<usernames.length;i++)
-	{
-		
-	}
-	io.sockets.emit('disconnect', {
-		Code:GivenCode
+	delete usernames[socket.username];
+	socket.leave(socket.room);
+	io.sockets.emit('end of session', {
+		Code:Data.code
 	});
 });
+socket.on('disconnect', function(){
+	// remove the username from global usernames list
+
+	//delete usernames[socket.username];
+	//socket.leave(socket.room);
+	//console.log("Disconnection from Chriz");
+	//console.log(usernames);
+	
+	
+	
+	// remove the username from global usernames list
+	console.log(socket);
+	var i = usernames.indexOf(socket.username)
+	console.log(usernames[i]);//returns undefined
+	usernames.splice(i, 1);
+	socket.leave(socket.room);
+	console.log("Disconnection from Chriz");
+	console.log(usernames);
+	});
 
 });
 
