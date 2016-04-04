@@ -19,7 +19,7 @@
 	<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
 	<script>
 		var socket = io.connect('/')
-		//var socket = io.connect('http://localhost:3000/')
+		var socket = io.connect('http://localhost:3000/')
 		var SessionCode;
 		var playerCount = 0; //sets from server
 		var UserName = "";
@@ -66,6 +66,7 @@
 		});
 		
 		socket.on("start session", function(data) {
+			alert("Working")
 			if(SessionCode = data.Code)
 			{
 			document.getElementById("Screen2").className = "visible";
