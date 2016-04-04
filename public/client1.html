@@ -18,7 +18,7 @@
 	</style>
 	<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
 	<script>
-		var socket = io.connect('/')
+		//var socket = io.connect('/')
 		var socket = io.connect('http://localhost:3000/')
 		var SessionCode;
 		var playerCount = 0; //sets from server
@@ -66,7 +66,6 @@
 		});
 		
 		socket.on("start session", function(data) {
-			alert("Working")
 			if(SessionCode = data.Code)
 			{
 			document.getElementById("Screen2").className = "visible";
@@ -94,8 +93,7 @@
 				document.getElementById("Submit").onclick = function(){Buzz()}
 			}
 		})
-
-		socket.on("disconnect", function(data) {
+		socket.on("end of session", function(data) {
 			if(SessionCode = data.Code)
 			{
 				BuzzState = 0;
@@ -144,9 +142,6 @@
 </form>
 <p id="display"></p> 
 <!-- This is battle form -->
-
 <p id="display"></p> 
 </body>
 </html>
-
-
