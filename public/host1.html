@@ -45,7 +45,6 @@
 					socket.emit('Create Session', Data);
 						
 			}
-
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
 			document.getElementById("codeSpace").innerHTML = UserCode;
@@ -120,7 +119,6 @@
 					document.getElementById("Screen4").className = "hidden"
 				}
 			});
-
 			function CorrectReset()//hide stuff
 			{
 				TeamPoints[CurrentTeam-1]++;
@@ -162,7 +160,7 @@
 				document.getElementById("Screen4").className = "hidden"
 				document.getElementById("Useful").innerHTML = ""
 				var data = {
-				codea:UserCode
+				code:UserCode
 				}
 				socket.emit("End Session", data);
 			
