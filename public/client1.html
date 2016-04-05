@@ -96,7 +96,8 @@
 		socket.on("end of session", function(data) {
 			if(SessionCode = data.Code)
 			{
-				BuzzState = 0;
+				location.reload();
+				/*BuzzState = 0;
 				document.getElementById("Submit").value = "Submit"
 				document.getElementById("Submit").onclick = function(){JoinSession()}
 				document.getElementById("Screen1").className = "visible";
@@ -111,6 +112,7 @@
 				};
 				socket.emit('disconnect', Data);
 				alert("eferqrweq")
+				*/
 			}
 		})
 		
