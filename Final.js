@@ -23,6 +23,7 @@ socket.on("Create Session", function(Data){
 		var Team = Data.hostTeam;
 		socket.username = Name;
 		socket.room = genCode;
+		NumberOfGuests++;
 		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host"});
 		Rooms.push(genCode);
 		socket.join(genCode);
@@ -43,28 +44,28 @@ socket.on("join session", function(Code){//Checks the code
 			if(GivenCode == Rooms[i])
 			{
 				NumberOfGuests++;
+				console.log("NumberOfGuests " + NumberOfGuests);
 				ValidCode = true;
 				socket.room = Rooms[i];
 				socket.username = GivenName;
 				socket.team = GivenTeam;
 				usernames.push({userName:GivenName, code:GivenCode, team:GivenTeam, rank:"User"});
 				socket.join(Rooms[i]);
-				if(NumberOfGuests != 0)
-				{
-					for(j=0;j<=NumberOfGuests;j++)
+					for(j=0;j<NumberOfGuests;j++)
 					{
+						console.log("It reaches the for loop");
+						console.log(usernames[j]);
 						if(usernames[j]['code'] == GivenCode)
 						{
+							console.log("It reaches inside the code check")
 							if(usernames[j]['rank'] != "Host")
 							{
-							GroupList.push(usernames[j]['userName']);
+								console.log("It reaches the push part");
+								GroupList.push(usernames[j]['userName']);
 							}
 						}
 					}
-				}else{
-							GroupList.push(GivenName);
-				}
-				
+				console.log(GroupList);
 				socket.emit('user recieve code', {
 					Code: GivenCode
 				});//returns back to the caller
@@ -81,7 +82,7 @@ socket.on("join session", function(Code){//Checks the code
 			socket.emit('Bad Code', {
 				result:false
 			});			
-		}	
+		}		
 	});
 
 	
@@ -124,8 +125,9 @@ socket.on("End Session", function(Data){
 		Code:Data.code
 	});
 });
-socket.on('disconnect', function(){
-	console.log(socket.username);
+socket.on('disconnect', function(data){
+	console.log("Below is the person that disconnected")
+	console.log(socket.username)
 	for(i=0;i<usernames.length;i++)
 	{
 		if(usernames[i]['userName'] == socket.username)
@@ -139,6 +141,9 @@ socket.on('disconnect', function(){
 				{
 					if(Rooms[j] == usernames[i]['code'])
 					{
+					io.sockets.emit('end of session',{
+						Code:usernames[i]['code']
+					})
 					Rooms.splice(j,1);
 					}
 				}
@@ -147,8 +152,10 @@ socket.on('disconnect', function(){
 		}
 	}
 	socket.leave(socket.room);
+	console.log("Below is the Username Array after Disconnect");
+	console.log(usernames);
+	console.log(Rooms);
 	});
-
 });
 
 	
