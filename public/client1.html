@@ -103,6 +103,14 @@
 				document.getElementById("Screen2").className = "visible";
 				document.getElementById("name").value = "";
 				document.getElementById("code").value = "";
+				document.getElementById("display").innerHTML = "";
+				document.getElementById("teamNum").value = "";
+				alert("asdsa");
+				var Data = {
+					dataName: UserName
+				};
+				socket.emit('disconnect', Data);
+				alert("eferqrweq")
 			}
 		})
 		
