@@ -1,22 +1,18 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
-var express = require('express'); //Module for interface
+var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(bodyParser.json({ type: 'application/*+json' })); 
-//var HostClass = require('./HostClass');
-//var UserClass = require('./UserClass');
-//var HostSession = [];//This contains the DJ Name and Code 
-//var UserSession = [];//This contains the Guest Name, the code entered, and their vote 
 var Rooms = [];
 var usernames = [];//{}for json data, but we use [] because of the way we store the data
-var UniqueCode = true;//If else statement for genRand()
+var UniqueCode = true;
 var ValidCode = false;
-var genCode;//User Code 
+var genCode;
 var NumberOfGuests = 0;
 
 io.on('connection', function (socket) {
@@ -89,7 +85,7 @@ socket.on("join session", function(Code){//Checks the code
 	});
 
 	
-//Start Session doesn't work at all Trace all the way back
+
 socket.on("Start Session", function(Data){
 	var GivenCode = Data.code;
 	io.sockets.emit('start session', {
@@ -129,23 +125,28 @@ socket.on("End Session", function(Data){
 	});
 });
 socket.on('disconnect', function(){
-	// remove the username from global usernames list
-
-	//delete usernames[socket.username];
-	//socket.leave(socket.room);
-	//console.log("Disconnection from Chriz");
-	//console.log(usernames);
-	
-	
-	
-	// remove the username from global usernames list
-	console.log(socket);
-	var i = usernames.indexOf(socket.username)
-	console.log(usernames[i]);//returns undefined
-	usernames.splice(i, 1);
+	console.log(socket.username);
+	for(i=0;i<usernames.length;i++)
+	{
+		if(usernames[i]['userName'] == socket.username)
+		{
+			if(usernames[i]['rank'] == 'User')
+			{
+				NumberOfGuests--;
+			}else if(usernames[i]['rank'] == 'Host')
+			{
+				for(j=0;j<Rooms.length;j++)
+				{
+					if(Rooms[j] == usernames[i]['code'])
+					{
+					Rooms.splice(j,1);
+					}
+				}
+			}
+			usernames.splice(i,1);
+		}
+	}
 	socket.leave(socket.room);
-	console.log("Disconnection from Chriz");
-	console.log(usernames);
 	});
 
 });
