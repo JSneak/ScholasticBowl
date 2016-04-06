@@ -1,10 +1,10 @@
 {
   "name": "ScholasticBowl",
   "version": "0.0.0",
-  "description": "Buzzer test app",
+  "description": "Socket.io Lobby App",
   "main": "Improved.js",
   "scripts": {
-	"start": "node Improved.js"
+	"start": "node Final.js"
   },
   "dependencies": {
     "body-parser": "latest",
@@ -13,7 +13,7 @@
   },
   "repository":{
 	"type": "git",
-	"url": "https://github.com/JSneak/ScholasticBowl.git"
+	"url": "https://github.com/JSneak/Socket.io-Lobby-System.git"
 	},
   "author": "Sean Kim"
 }
