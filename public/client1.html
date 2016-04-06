@@ -97,22 +97,6 @@
 			if(SessionCode = data.Code)
 			{
 				location.reload();
-				/*BuzzState = 0;
-				document.getElementById("Submit").value = "Submit"
-				document.getElementById("Submit").onclick = function(){JoinSession()}
-				document.getElementById("Screen1").className = "visible";
-				document.getElementById("Screen2").className = "visible";
-				document.getElementById("name").value = "";
-				document.getElementById("code").value = "";
-				document.getElementById("display").innerHTML = "";
-				document.getElementById("teamNum").value = "";
-				alert("asdsa");
-				var Data = {
-					dataName: UserName
-				};
-				socket.emit('disconnect', Data);
-				alert("eferqrweq")
-				*/
 			}
 		})
 		
@@ -130,9 +114,6 @@
 		}
 		socket.emit("buzz event", Data)
 		}
-//-------------------------------------------------------------------------------------		
-//-------------------------------------------------------------------------------------			
-//Make a form tag for the button
 	</script>
 </head>
 <body>
@@ -150,8 +131,6 @@
    <input type="button" value="Submit" id="Submit" onClick="JoinSession()">
  </p>
 </form>
-<p id="display"></p> 
-<!-- This is battle form -->
 <p id="display"></p> 
 </body>
 </html>
