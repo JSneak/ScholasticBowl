@@ -44,7 +44,6 @@ socket.on("join session", function(Code){//Checks the code
 			if(GivenCode == Rooms[i])
 			{
 				NumberOfGuests++;
-				console.log("NumberOfGuests " + NumberOfGuests);
 				ValidCode = true;
 				socket.room = Rooms[i];
 				socket.username = GivenName;
@@ -53,14 +52,10 @@ socket.on("join session", function(Code){//Checks the code
 				socket.join(Rooms[i]);
 					for(j=0;j<NumberOfGuests;j++)
 					{
-						console.log("It reaches the for loop");
-						console.log(usernames[j]);
 						if(usernames[j]['code'] == GivenCode)
 						{
-							console.log("It reaches inside the code check")
 							if(usernames[j]['rank'] != "Host")
 							{
-								console.log("It reaches the push part");
 								GroupList.push(usernames[j]['userName']);
 							}
 						}
