@@ -23,6 +23,9 @@ socket.on("Create Session", function(Data){
 		var Team = Data.hostTeam;
 		socket.username = Name;
 		socket.room = genCode;
+		console.log("Below are the debugging statements for Host " + Name);
+		console.log(socket.username +", "+Name+ " <----- This confirms that socket.username is getting the correct value");
+		console.log(socket.room + " <------ This confirms that socket.room is valid and working");
 		NumberOfGuests++;
 		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host"});
 		Rooms.push(genCode);
@@ -121,8 +124,8 @@ socket.on("End Session", function(Data){
 	});
 });
 socket.on('disconnect', function(data){
-	console.log("Below is the person that disconnected")
-	console.log(socket.username)
+	console.log("Below is the person that disconnected");
+	console.log(socket.username);
 	for(i=0;i<usernames.length;i++)
 	{
 		if(usernames[i]['userName'] == socket.username)
@@ -136,6 +139,7 @@ socket.on('disconnect', function(data){
 				{
 					if(Rooms[j] == usernames[i]['code'])
 					{
+					console.log("This reached inside the Room/Code/Host Check");
 					io.sockets.emit('end of session',{
 						Code:usernames[i]['code']
 					})
