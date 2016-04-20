@@ -163,7 +163,7 @@
 				code:UserCode
 				}
 				socket.emit("End Session", data);
-			
+				socket.disconnect();
 			}
 //Make the host side to see who clicks first and reset it.
 		</script>
