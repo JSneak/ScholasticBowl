@@ -117,8 +117,8 @@ socket.on("Wrong Reset", function(Data){
 });
 
 socket.on("End Session", function(Data){
-	delete usernames[socket.username];
-	socket.leave(socket.room);
+	//delete usernames[socket.username];
+	//socket.leave(socket.room);
 	io.sockets.emit('end of session', {
 		Code:Data.code
 	});
