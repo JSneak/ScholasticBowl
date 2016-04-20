@@ -96,7 +96,7 @@
 		socket.on("end of session", function(data) {
 			if(SessionCode = data.Code)
 			{
-				location.reload();
+				socket.disconnect();
 			}
 		})
 		
