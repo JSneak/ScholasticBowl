@@ -1,8 +1,8 @@
 {
-  "name": "ScholasticBowl",
+  "name": "Trivia System",
   "version": "0.0.0",
   "description": "Socket.io Lobby App",
-  "main": "Improved.js",
+  "main": "Final.js.js",
   "scripts": {
 	"start": "node Final.js"
   },
