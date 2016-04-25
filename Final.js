@@ -41,12 +41,11 @@ socket.on("join session", function(Code){//Checks the code
 		var GivenCode = Code.dataCode;
 		var GivenTeam = Code.dataTeam;//Implement Later
 		var GroupList = [];
-		
+		NumberOfGuests++;
 		for(i=0;i<Rooms.length;i++)
 		{
 			if(GivenCode == Rooms[i])
 			{
-				NumberOfGuests++;
 				ValidCode = true;
 				socket.room = Rooms[i];
 				socket.username = GivenName;
@@ -139,11 +138,11 @@ socket.on('disconnect', function(data){
 				{
 					if(Rooms[j] == usernames[i]['code'])
 					{
-					console.log("This reached inside the Room/Code/Host Check");
 					io.sockets.emit('end of session',{
 						Code:usernames[i]['code']
 					})
 					Rooms.splice(j,1);
+					NumberOfGuests--;
 					}
 				}
 			}

@@ -17,8 +17,8 @@
 		<script>
 			var PlayersInLobby= 0;
 			var UserCode;
-			var socket = io.connect('/')
-			//var socket = io.connect('http://localhost:3000/')
+			//var socket = io.connect('/')
+			var socket = io.connect('http://localhost:3000/')
 			var Name 
 			var Team
 			var PermantOutput="";
@@ -150,20 +150,12 @@
 			
 			function EndSession()
 			{
-				document.getElementById("codeSpace").innerHTML = ""
-				document.getElementById("display").innerHTML = ""
-				document.getElementById("Screen1").className = "visible"
-				document.getElementById("Button2").value ="Start";
-				document.getElementById("Button2").onclick = function(){StartGame()}
-				document.getElementById("Screen2").className = "hidden"
-				document.getElementById("Screen3").className = "hidden"
-				document.getElementById("Screen4").className = "hidden"
-				document.getElementById("Useful").innerHTML = ""
 				var data = {
 				code:UserCode
 				}
 				socket.emit("End Session", data);
 				socket.disconnect();
+				location.reload();
 			}
 //Make the host side to see who clicks first and reset it.
 		</script>
