@@ -47,7 +47,7 @@
 			}
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
-			document.getElementById("codeSpace").innerHTML = UserCode;
+			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
 			});
 			
 			socket.on("displayName", function(data) {
