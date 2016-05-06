@@ -114,6 +114,8 @@
 			userTeam: Team
 		}
 		socket.emit("buzz event", Data)
+                var BuzzSound = new Audio("buzz.mp3");
+                BuzzSound.play();
 		}
 	</script>
 </head>
