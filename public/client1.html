@@ -80,6 +80,7 @@
 			if(SessionCode = data.Code)
 			{
 				BuzzState = 1;
+				document.getElementById("Submit").disabled = true;
 				document.getElementById("Submit").value = "Someone else is answering"
 				document.getElementById("Submit").onclick = function(){PlaceHolder()}
 			}
@@ -89,6 +90,7 @@
 			if(SessionCode = data.Code)
 			{
 				BuzzState = 0;
+				document.getElementById("Submit").disabled = false;
 				document.getElementById("Submit").value = "Buzz"
 				document.getElementById("Submit").onclick = function(){Buzz()}
 			}
