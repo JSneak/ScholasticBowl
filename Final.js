@@ -23,9 +23,6 @@ socket.on("Create Session", function(Data){
 		var Team = Data.hostTeam;
 		socket.username = Name;
 		socket.room = genCode;
-		console.log("Below are the debugging statements for Host " + Name);
-		console.log(socket.username +", "+Name+ " <----- This confirms that socket.username is getting the correct value");
-		console.log(socket.room + " <------ This confirms that socket.room is valid and working");
 		NumberOfGuests++;
 		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host", sessionState: false});
 		Rooms.push(genCode);
@@ -43,9 +40,6 @@ socket.on("join session", function(Code){//Checks the code
 		var GroupList = [];
 		for(i=0;i<NumberOfGuests;i++)
 		{
-			console.log(usernames[0] + " HA HA NEW LINE");
-			console.log(NumberOfGuests);
-			console.log(usernames[i]);
 			if(usernames[i]['code'] == GivenCode && usernames[i]['rank'] == "Host")
 			{
 				if(usernames[i]['sessionState'] == true)//
@@ -137,15 +131,12 @@ socket.on("Wrong Reset", function(Data){
 });
 
 socket.on("End Session", function(Data){
-	//delete usernames[socket.username];
-	//socket.leave(socket.room);
 	io.sockets.emit('end of session', {
 		Code:Data.code
 	});
 });
+
 socket.on('disconnect', function(data){
-	console.log("Below is the person that disconnected");
-	console.log(socket.username);
 	for(i=0;i<usernames.length;i++)
 	{
 		if(usernames[i]['userName'] == socket.username)
@@ -171,9 +162,6 @@ socket.on('disconnect', function(data){
 		}
 	}
 	socket.leave(socket.room);
-	console.log("Below is the Username Array after Disconnect");
-	console.log(usernames);
-	console.log(Rooms);
 	});
 });
 
