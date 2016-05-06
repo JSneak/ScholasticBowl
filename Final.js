@@ -27,7 +27,7 @@ socket.on("Create Session", function(Data){
 		console.log(socket.username +", "+Name+ " <----- This confirms that socket.username is getting the correct value");
 		console.log(socket.room + " <------ This confirms that socket.room is valid and working");
 		NumberOfGuests++;
-		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host"});
+		usernames.push({userName: Name, code:genCode, NumTeam:Team, rank:"Host", sessionState: false});
 		Rooms.push(genCode);
 		socket.join(genCode);
 		socket.emit('recieve code', {
@@ -39,30 +39,40 @@ socket.on("join session", function(Code){//Checks the code
 		ValidCode = false;
 		var GivenName = Code.dataName;
 		var GivenCode = Code.dataCode;
-		var GivenTeam = Code.dataTeam;//Implement Later
+		var GivenTeam = Code.dataTeam;
 		var GroupList = [];
-		NumberOfGuests++;
-		for(i=0;i<Rooms.length;i++)
+		for(i=0;i<NumberOfGuests;i++)
 		{
-			if(GivenCode == Rooms[i])
+			console.log(usernames[0] + " HA HA NEW LINE");
+			console.log(NumberOfGuests);
+			console.log(usernames[i]);
+			if(usernames[i]['code'] == GivenCode && usernames[i]['rank'] == "Host")
 			{
-				ValidCode = true;
-				socket.room = Rooms[i];
-				socket.username = GivenName;
-				socket.team = GivenTeam;
-				usernames.push({userName:GivenName, code:GivenCode, team:GivenTeam, rank:"User"});
-				socket.join(Rooms[i]);
-					for(j=0;j<NumberOfGuests;j++)
+				if(usernames[i]['sessionState'] == true)//
+				{
+					ValidCode = false;
+				}else{
+					NumberOfGuests++;
+					for(i=0;i<Rooms.length;i++)
 					{
-						if(usernames[j]['code'] == GivenCode)
+						if(GivenCode == Rooms[i])
 						{
-							if(usernames[j]['rank'] != "Host")
+							ValidCode = true;
+							socket.room = Rooms[i];
+							socket.username = GivenName;
+							socket.team = GivenTeam;
+							usernames.push({userName:GivenName, code:GivenCode, team:GivenTeam, rank:"User"});
+							socket.join(Rooms[i]);
+							for(j=0;j<NumberOfGuests;j++)
 							{
-								GroupList.push(usernames[j]['userName']);
+								if(usernames[j]['code'] == GivenCode)
+								{
+									if(usernames[j]['rank'] != "Host")
+									{
+										GroupList.push(usernames[j]['userName']);
+									}
+								}
 							}
-						}
-					}
-				console.log(GroupList);
 				socket.emit('user recieve code', {
 					Code: GivenCode
 				});//returns back to the caller
@@ -70,10 +80,11 @@ socket.on("join session", function(Code){//Checks the code
 					Code:GivenCode,
 					List:GroupList
 				});//returns to everyone
-
+						}
+					}
+				}
 			}
 		}
-		console.log(usernames);
 		if(ValidCode == false)
 		{
 			socket.emit('Bad Code', {
@@ -89,6 +100,16 @@ socket.on("Start Session", function(Data){
 	io.sockets.emit('start session', {
 					Code:GivenCode
 				});
+	for(x=0;x<NumberOfGuests;x++)
+	{
+		if(usernames[x]['rank'] == "Host")
+		{
+			if(usernames[x]['code'] == GivenCode)
+			{
+				usernames[x]['sessionState'] = true;
+			}
+		}
+	}
 });
 
 socket.on("buzz event", function(Data){
