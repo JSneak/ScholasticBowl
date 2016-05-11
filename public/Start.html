@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="style.css">
+<title>Speaker List</title>
+<style>
+        p.hidden{
+            display: none;
+        }
+        p.visible{
+            display: block;
+        }
+</style>
+
+<script>
+function accessCode(){
+}
+
+function sendCode(){
+	window.location.href = 'https://fhskimsean.herokuapp.com/client1.html'
+}
+
+
+</script>
+
+</head>
+<body>
+<form>
+<center>
+		<center>
+				<h2 class="header">Lobby Home Page</h2>
+				<a id="makeSession" onClick="sendCode()" class="waves-effect waves-light btn-large">Make Session</a>
+				<a id="joinSession" onClick="accessCode()" class="waves-effect waves-light btn-large">Join Session</a>
+			</center>
+</center>
+</form>
+</body>
+</html>
