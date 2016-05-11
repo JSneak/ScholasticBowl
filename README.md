@@ -2,6 +2,7 @@
 Socket.io Lobby System
 
 This is a trivia room for when you need a buzzer. This was built for a classroom enviroment and more is being added at a later date.
+Start Screen: https://fhskimsean.herokuapp.com/Start.html
 
 For Users: https://fhskimsean.herokuapp.com/client1.html
 
