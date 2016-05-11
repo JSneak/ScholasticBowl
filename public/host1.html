@@ -28,25 +28,31 @@
 			var CurrentTeam;
 			function ObtainCode()
 			{
-				Team = document.getElementById("NumOfTeams").value;
-				Name = document.getElementById("Name").value;
-					for(i=0;i<Team;i++)
-					{
-						TeamPoints[i] = 0;
-					}
-					console.log(TeamPoints);
-					document.getElementById("Screen1").className = "hidden"
-					document.getElementById("Screen2").className = "visible"
-					document.getElementById("Useful").innerHTML = "People in Session";
-					var Data = {
-						hostName: Name,
-						hostTeam: Team
-					}
-					document.getElementById("Name").value = "";
-					document.getElementById("NumOfTeams").value = "";
-					socket.emit('Create Session', Data);
+				if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
+				{
+					alert("No");
+				}else{
+					Team = document.getElementById("NumOfTeams").value;
+					Name = document.getElementById("Name").value;
+						for(i=0;i<Team;i++)
+						{
+							TeamPoints[i] = 0;
+						}
+						console.log(TeamPoints);
+						document.getElementById("Screen1").className = "hidden"
+						document.getElementById("Screen2").className = "visible"
+						document.getElementById("Useful").innerHTML = "People in Session";
+						var Data = {
+							hostName: Name,
+							hostTeam: Team
+						}
+						document.getElementById("Name").value = "";
+						document.getElementById("NumOfTeams").value = "";
+						socket.emit('Create Session', Data);
 						
+				}
 			}
+			
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
 			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
