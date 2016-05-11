@@ -15,6 +15,16 @@
 		border: 1px solid black;
 		}
 		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script>//Fix for Chrome
+			$(document).bind('mobileinit',function(){
+			$.mobile.changePage.defaults.changeHash = false;
+			$.mobile.hashListeningEnabled = false;
+			$.mobile.pushStateEnabled = false;
+		});
+		</script>
+		<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
 		<script>
 			var PlayersInLobby= 0;
@@ -164,6 +174,54 @@
 				location.reload();
 			}
 //Make the host side to see who clicks first and reset it.
+
+
+
+
+
+function addCell(){
+	var newStu;
+	newStu = "<tr><td><div class='ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset'><input type = 'text' placeholder = 'Student Name...'></input></div></td></tr>";
+	
+	$("#stuBod").append(newStu);
+	
+	$("#stuBod").find("input:last").on("keyup", function(){
+		cellListener($(this));
+	});
+}
+
+function removeCell(cur){
+	if(cur.val() == ""){
+		if(cur.parentsUntil("tbody").next().find("input").val() == ""){
+			cur.parentsUntil("tbody").next().remove();
+			cur.off("keyup");
+			cur.on("keyup", function(){
+				cellListener(cur);
+			})
+		}else{
+			cur.parentsUntil("tbody").remove();
+		}
+	}
+}
+			
+//Change the if statement to check the number
+function cellListener(cell){
+	if(cell.val() != ""){
+		cell.off("keyup");
+		cell.on("keyup", function(){
+			removeCell(cell);
+		})
+		addCell();
+	}
+}
+
+//Change #stuBod to the groupNum
+$(function(){
+	$("#stuBod").find("input:last").on("keyup", function(){
+		cellListener($(this));
+	});
+})//End of list of students
+
 		</script>
 		
 	</head>
@@ -191,4 +249,30 @@
 	</p>
 	<p id="displayScreen" class="visible">
 	</p>
+<!-- DIVIDE BETWEEN CHOI'S CODE AND MINE -->	
+	<form id = 'studFrm'>
+	<label for = 'stuTab' class = 'ui-hidden-accessible'>Student Table</label>
+	<table data-role = 'table' class = 'ui-responsive'>
+		<thead>
+			<tr>
+				<th>Student Name</th><!--
+				<th>Student Information</th>-->
+			</tr>
+		</thead>
+		<tbody id = 'stuBod'>
+			<tr>
+				<td>
+					<input type = 'text' placeholder = 'Student Name...'></input>
+				</td><!--
+				<td>
+					<button class = 'ui-btn ui-shadow ui-corner-all'>MORE INFO</button>
+				</td>-->
+			</tr>
+		</tbody>
+	</table>
+</form><br/>
+<form id = 'groupFrm'>
+	<label for = 'groupNum' class = 'ui-hidden-accessible'>Number of Groups</label>
+	<input type  = 'number' id = 'groupNum' min = '2' placeholder = 'Number of People per Group...'></input><br/>
+</form>
 </html>
