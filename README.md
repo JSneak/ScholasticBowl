@@ -8,7 +8,7 @@ For Users: https://fhskimsean.herokuapp.com/client1.html
 
 For Hosts: https://fhskimsean.herokuapp.com/host1.html
 
-Instructions:
+Instructions:<br>
 1. Have the trivia reader go to the host site and make a session.<br>
 2. The other people should go to the client1 link and enter in the code and team number.<br>
 3. Once everyone is in, the host can start the session.<br>
