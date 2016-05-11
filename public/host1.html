@@ -163,6 +163,17 @@
 				socket.disconnect();
 				location.reload();
 			}
+			http://stackoverflow.com/questions/29397885/generate-textboxes-based-on-number-enter-by-user
+			function generate() 
+			{
+				var a = parseInt(document.getElementById("nochapter").value);
+				var ch = document.getElementById("ch");	
+				for (i = 0; i < a; i++) 
+				{
+					var input = document.createElement("input");
+					ch.appendChild(input);
+				}
+			}
 //Make the host side to see who clicks first and reset it.
 		</script>
 		
