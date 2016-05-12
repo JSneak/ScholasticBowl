@@ -11,8 +11,11 @@
         p.visible{
             display: block;
         }
-		table, th, td {
-		border: 1px solid black;
+		div.hidden{
+			display: none;
+		}
+		div.visible{
+			display: block;
 		}
 		</style>
 		<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
@@ -28,28 +31,31 @@
 			var CurrentTeam;
 			function ObtainCode()
 			{
-				if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
+				if()
 				{
-					alert("No");
-				}else{
-					Team = document.getElementById("NumOfTeams").value;
-					Name = document.getElementById("Name").value;
-						for(i=0;i<Team;i++)
-						{
-							TeamPoints[i] = 0;
-						}
-						console.log(TeamPoints);
-						document.getElementById("Screen1").className = "hidden"
-						document.getElementById("Screen2").className = "visible"
-						document.getElementById("Useful").innerHTML = "People in Session";
-						var Data = {
-							hostName: Name,
-							hostTeam: Team
-						}
-						document.getElementById("Name").value = "";
-						document.getElementById("NumOfTeams").value = "";
-						socket.emit('Create Session', Data);
-						
+					if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
+					{
+						alert("No");
+					}else{
+						Team = document.getElementById("NumOfTeams").value;
+						Name = document.getElementById("Name").value;
+							for(i=0;i<Team;i++)
+							{
+								TeamPoints[i] = 0;
+							}
+							console.log(TeamPoints);
+							document.getElementById("Screen1").className = "hidden"
+							document.getElementById("cb").className = "hidden"
+							document.getElementById("Screen2").className = "visible"
+							document.getElementById("Useful").innerHTML = "People in Session";
+							var Data = {
+								hostName: Name,
+								hostTeam: Team
+							}
+							document.getElementById("Name").value = "";
+							document.getElementById("NumOfTeams").value = "";
+							socket.emit('Create Session', Data);	
+					}
 				}
 			}
 			
@@ -184,21 +190,25 @@
 	<p id="codeSpace"></p>
 	<p id="Useful"></p>
 	<p id="display"></p>
+	
 	<p id="Screen1" class="visible">
-	Name <br>
+	<font size="4.5">Name</font> <br>
 		<input type="text" id='Name'> <br>
-	How Many Teams <br>
+	<font size="4.5">How Many Teams</font><br>
 		<input type="number" id="NumOfTeams"> <br>
-	Do you want custom team names?<br>
-	  <div class="switch">
-    <label>
-      Off
-      <input type="checkbox">
-      <span class="lever"></span>
-      On
-    </label><br><br>
+	<font size="4.5">Do you want custom team names?</font><br>
+	  <div id="cb" class="switch" class="visible">
+		<label>
+			<font size="4.5">Off</font>
+			<input type="checkbox">
+			<span class="lever"></span>
+			<font size="4.5">On</font>
+		</label><br><br>
 	<input type="button" value="Make Session" id="Button1" onclick="ObtainCode()"class="waves-effect waves-light btn-large"><br>
-  </div>
+	</div>
+	</p>
+	<p id="inBetween" class="hidden">
+	
 	</p>
 	<p id="Screen2" class="hidden">
 	<input type="button" value="Start" id="Button2" onclick="StartGame()"class="waves-effect waves-light btn-large">
