@@ -31,7 +31,7 @@
 			var CurrentTeam;
 			function ObtainCode()
 			{
-				if()
+				if(document.getElementById("cb").checked == false)
 				{
 					if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
 					{
@@ -45,7 +45,7 @@
 							}
 							console.log(TeamPoints);
 							document.getElementById("Screen1").className = "hidden"
-							document.getElementById("cb").className = "hidden"
+							document.getElementById("dv1").className = "hidden"
 							document.getElementById("Screen2").className = "visible"
 							document.getElementById("Useful").innerHTML = "People in Session";
 							var Data = {
@@ -56,6 +56,9 @@
 							document.getElementById("NumOfTeams").value = "";
 							socket.emit('Create Session', Data);	
 					}
+				}else{
+					document.getElementById("inBetween").className = "visible";
+					document.getElementById("Screen1").className = "hidden";
 				}
 			}
 			
@@ -197,10 +200,10 @@
 	<font size="4.5">How Many Teams</font><br>
 		<input type="number" id="NumOfTeams"> <br>
 	<font size="4.5">Do you want custom team names?</font><br>
-	  <div id="cb" class="switch" class="visible">
+	  <div class="switch" id="dv1" class="visible">
 		<label>
 			<font size="4.5">Off</font>
-			<input type="checkbox">
+			<input id="cb" type="checkbox">
 			<span class="lever"></span>
 			<font size="4.5">On</font>
 		</label><br><br>
