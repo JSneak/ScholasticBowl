@@ -31,42 +31,41 @@
 			var PermantOutput="";
 			var TeamPoints = [];
 			var CurrentTeam;
-			function ObtainCode()
-			{
+		
+			$('#Button1').click(function(){
 				if(document.getElementById("cb").checked == false)
-				{
-					if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
 					{
-						alert("No");
+						if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
+						{
+							alert("No");
+						}else{
+							Team = document.getElementById("NumOfTeams").value;
+							Name = document.getElementById("Name").value;
+								for(i=0;i<Team;i++)
+								{
+									TeamPoints[i] = 0;
+								}
+								console.log(TeamPoints);
+								document.getElementById("Screen1").className = "hidden"
+								document.getElementById("dv1").className = "hidden"
+								document.getElementById("Screen2").className = "visible"
+								document.getElementById("Useful").innerHTML = "People in Session";
+								var Data = {
+									hostName: Name,
+									hostTeam: Team
+								}
+								document.getElementById("Name").value = "";
+								document.getElementById("NumOfTeams").value = "";
+								socket.emit('Create Session', Data);	
+						}
 					}else{
-						Team = document.getElementById("NumOfTeams").value;
-						Name = document.getElementById("Name").value;
-							for(i=0;i<Team;i++)
-							{
-								TeamPoints[i] = 0;
-							}
-							console.log(TeamPoints);
-							document.getElementById("Screen1").className = "hidden"
-							document.getElementById("dv1").className = "hidden"
-							document.getElementById("Screen2").className = "visible"
-							document.getElementById("Useful").innerHTML = "People in Session";
-							var Data = {
-								hostName: Name,
-								hostTeam: Team
-							}
-							document.getElementById("Name").value = "";
-							document.getElementById("NumOfTeams").value = "";
-							socket.emit('Create Session', Data);	
+						generate();
+						document.getElementById("inBetween").className = "visible";
+						document.getElementById("Screen1").className = "hidden";
+						document.getElementById("dv1").className = "hidden";
 					}
-				}else{
-					//generate();
-					document.getElementById("inBetween").className = "visible";
-					document.getElementById("Screen1").className = "hidden";
-					document.getElementById("dv1").className = "hidden";
-					document.getElementById("ch").className = "visible";
-				}
-			}
-			
+			});
+
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
 			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
@@ -111,14 +110,13 @@
 				}
 			}
 			
-			function UpdateScore()
-			{
-			var Output =  "";
-				for(i=1;i<=Team;i++)
-				{
-					Output += "Team " + i + ": " + TeamPoints[i-1] + "<br>"
-				}
-				document.getElementById("codeSpace").innerHTML = Output
+			function UpdateScore(){
+				var Output =  "";
+					for(i=1;i<=Team;i++)
+					{
+						Output += "Team " + i + ": " + TeamPoints[i-1] + "<br>"
+					}
+					document.getElementById("codeSpace").innerHTML = Output
 			}
 			
 			
@@ -177,20 +175,10 @@
 				socket.disconnect();
 				location.reload();
 			}
-			//http://stackoverflow.com/questions/29397885/generate-textboxes-based-on-number-enter-by-user
-			//function generate() 
-			//{
-				//var a = parseInt(document.getElementById("NumOfTeams").value);
-				//var ch = document.getElementById("ch");	
-				//for (i = 0; i < a; i++) 
-				//{
-					//var input = document.createElement("input");
-					//ch.appendChild(input);
-				//}
-			//}
+			
 			function generate()
 			{
-				$("#NumOfTeams").change(function () {
+
 					var count = $("#holder input").size();
 					var requested = parseInt($("#NumOfTeams").val(), 10);
 
@@ -198,21 +186,21 @@
 						for (i = count; i < requested; i++) {
 							var $ctrl = $('<input/>').attr({
 							type: 'text',
-							name: 'text' + i,
-							value: 'text'
+							placeholder: 'Enter team name for team ' + (i+1),
+							id: 'temp' + i
 						});
-						$("#ch").append($ctrl);
+						$("#inBetween").prepend($ctrl);
 						}
 					} else if (requested < count) 
 					{
 						var x = requested - 1;
 						$("#holder input:gt(" + x + ")").remove();
 					}
-				});
+			
 			}
 });
-http://stackoverflow.com/questions/12627443/jquery-click-vs-onclick
-http://jsfiddle.net/Zsmkn/4/
+//http://stackoverflow.com/questions/12627443/jquery-click-vs-onclick
+//http://jsfiddle.net/Zsmkn/4/
 //Make the host side to see who clicks first and reset it.
 		</script>
 		
@@ -226,9 +214,9 @@ http://jsfiddle.net/Zsmkn/4/
 	
 	<p id="Screen1" class="visible">
 	<font size="4.5">Name</font> <br>
-		<input type="text" id='Name'> <br>
+		<input type="text" id='Name'></input> <br>
 	<font size="4.5">How Many Teams</font><br>
-		<input type="number" id="NumOfTeams"> <br>
+		<input type="number" id="NumOfTeams"></input> <br>
 	<font size="4.5">Do you want custom team names?</font><br>
 	  <div class="switch" id="dv1" class="visible">
 		<label>
@@ -237,11 +225,11 @@ http://jsfiddle.net/Zsmkn/4/
 			<span class="lever"></span>
 			<font size="4.5">On</font>
 		</label><br><br>
-		<input type="button" value="Make Session" id="Button1" onClick="ObtainCode()" class="waves-effect waves-light btn-large"> <br>
+		<input type="button" value="Make Session" id="Button1" class="waves-effect waves-light btn-large"> <br>
 	</div>
 	</p>
 	<p id="inBetween" class="hidden">
-	<div id="ch" class="hidden"></div>
+	<input type="button" value="Next" id="NextButton" class="waves-effect waves-light btn-large">
 	</p>
 	<p id="Screen2" class="hidden">
 	<input type="button" value="Start" id="Button2" onclick="StartGame()"class="waves-effect waves-light btn-large">
@@ -252,6 +240,5 @@ http://jsfiddle.net/Zsmkn/4/
 	<p id="Screen4" class="hidden">
 	<input type="button" value="End Session" id="EndButton" onClick="EndSession()"class='waves-effect waves-light btn-large red lighten-1'>
 	</p>
-	<p id="displayScreen" class="visible">
-	</p>
+	<p id="displayScreen" class="visible"></p>
 </html>
