@@ -18,8 +18,10 @@
 			display: block;
 		}
 		</style>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
 		<script>
+		$(document).ready(function () {
 			var PlayersInLobby= 0;
 			var UserCode;
 			var socket = io.connect('/')
@@ -57,7 +59,7 @@
 							socket.emit('Create Session', Data);	
 					}
 				}else{
-					generate();
+					//generate();
 					document.getElementById("inBetween").className = "visible";
 					document.getElementById("Screen1").className = "hidden";
 					document.getElementById("dv1").className = "hidden";
@@ -176,19 +178,40 @@
 				location.reload();
 			}
 			//http://stackoverflow.com/questions/29397885/generate-textboxes-based-on-number-enter-by-user
-			function generate() 
+			//function generate() 
+			//{
+				//var a = parseInt(document.getElementById("NumOfTeams").value);
+				//var ch = document.getElementById("ch");	
+				//for (i = 0; i < a; i++) 
+				//{
+					//var input = document.createElement("input");
+					//ch.appendChild(input);
+				//}
+			//}
+			function generate()
 			{
-				var a = parseInt(document.getElementById("NumOfTeams").value);
-				var ch = document.getElementById("ch");	
-				for (i = 0; i < a; i++) 
-				{
-					var input = document.createElement("input");
-					ch.appendChild(input);
-				}
-			}
-			
-			
+				$("#NumOfTeams").change(function () {
+					var count = $("#holder input").size();
+					var requested = parseInt($("#NumOfTeams").val(), 10);
 
+					if (requested > count) {
+						for (i = count; i < requested; i++) {
+							var $ctrl = $('<input/>').attr({
+							type: 'text',
+							name: 'text' + i,
+							value: 'text'
+						});
+						$("#ch").append($ctrl);
+						}
+					} else if (requested < count) 
+					{
+						var x = requested - 1;
+						$("#holder input:gt(" + x + ")").remove();
+					}
+				});
+			}
+});
+http://stackoverflow.com/questions/12627443/jquery-click-vs-onclick
 //Make the host side to see who clicks first and reset it.
 		</script>
 		
@@ -213,7 +236,7 @@
 			<span class="lever"></span>
 			<font size="4.5">On</font>
 		</label><br><br>
-		<input type="button" value="Make Session" id="Button1" onclick="ObtainCode()"class="waves-effect waves-light btn-large"><br>
+		<input type="button" value="Make Session" id="Button1" onClick="ObtainCode()" class="waves-effect waves-light btn-large"> <br>
 	</div>
 	</p>
 	<p id="inBetween" class="hidden">
