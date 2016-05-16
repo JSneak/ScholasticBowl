@@ -31,8 +31,11 @@
 			var PermantOutput="";
 			var TeamPoints = [];
 			var CurrentTeam;
+			var CustomNameArray = [];
 		
 			$('#Button1').click(function(){
+				Name = document.getElementById("Name").value;
+				Team = document.getElementById("NumOfTeams").value;
 				if(document.getElementById("cb").checked == false)
 					{
 						if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
@@ -65,18 +68,28 @@
 						document.getElementById("dv1").className = "hidden";
 					}
 			});
-
-			socket.on('recieve code',function (data) {
-			UserCode = data.Code;
-			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
-			});
 			
-			socket.on("displayName", function(data) {
-				if(UserCode == data.Code)
+			$('#NextButton').click(function(){
+				for(i=0;i<Team;i++)
 				{
-					PlayersInLobby++;
-					document.getElementById("display").innerHTML = data.List;
+					CustomNameArray[i] = document.getElementById("temp"+i).value;
 				}
+				for(i=0;i<Team;i++)
+				{
+					TeamPoints[i] = 0;
+				}
+				console.log(TeamPoints);
+				document.getElementById("Screen1").className = "hidden"
+				document.getElementById("dv1").className = "hidden"
+				document.getElementById("Screen2").className = "visible"
+				document.getElementById("Useful").innerHTML = "People in Session";
+				var Data = {
+					hostName: Name,
+					hostTeam: Team
+				}
+				document.getElementById("Name").value = "";
+				document.getElementById("NumOfTeams").value = "";
+				socket.emit('Create Session', Data);	
 			});
 			
 			function StartGame()
@@ -95,18 +108,22 @@
 				document.getElementById("Screen4").className = "visible"
 			}
 			
-			function UpdateTable()
-			{
+			function UpdateTable(){
 				document.getElementById("Useful").innerHTML =""
-				for(i=1;i<=Team;i++)
-				{
-					PermantOutput += "<th>Team"+ i + "</th>";
-				}
-				PermantOutput += "</tr>"
-				document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
-				for(i=0;i<Team;i++)
-				{
-					
+				if(CustomNameArray.length <= 0){
+					for(i=1;i<=Team;i++)
+					{
+						PermantOutput += "<th>Team"+ i + "</th>";
+					}
+					PermantOutput += "</tr>"
+					document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
+				}else{
+					for(i=1;i<=Team;i++)
+					{
+						PermantOutput += "<th>"+i+": Team"+ CustomNameArray[i] + "</th>";
+					}
+					PermantOutput += "</tr>"
+					document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
 				}
 			}
 			
@@ -180,10 +197,10 @@
 			{
 
 					var count = $("#holder input").size();
-					var requested = parseInt($("#NumOfTeams").val(), 10);
+					//Team = parseInt($("#NumOfTeams").val(), 10);
 
-					if (requested > count) {
-						for (i = count; i < requested; i++) {
+					if (Team > count) {
+						for (i = count; i < Team; i++) {
 							var $ctrl = $('<input/>').attr({
 							type: 'text',
 							placeholder: 'Enter team name for team ' + (i+1),
@@ -191,14 +208,30 @@
 						});
 						$("#inBetween").prepend($ctrl);
 						}
-					} else if (requested < count) 
+					} else if (Team < count) 
 					{
-						var x = requested - 1;
+						var x = Team - 1;
 						$("#holder input:gt(" + x + ")").remove();
 					}
 			
 			}
+			
+
+			
+			socket.on('recieve code',function (data) {
+			UserCode = data.Code;
+			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
+			});
+			
+			socket.on("displayName", function(data) {
+				if(UserCode == data.Code)
+				{
+					PlayersInLobby++;
+					document.getElementById("display").innerHTML = data.List;
+				}
+			});
 });
+//http://stackoverflow.com/questions/8288046/javascript-function-does-not-work-within-jquery-document-ready-block
 //http://stackoverflow.com/questions/12627443/jquery-click-vs-onclick
 //http://jsfiddle.net/Zsmkn/4/
 //Make the host side to see who clicks first and reset it.
@@ -229,7 +262,7 @@
 	</div>
 	</p>
 	<p id="inBetween" class="hidden">
-	<input type="button" value="Next" id="NextButton" onClick="" class="waves-effect waves-light btn-large">
+	<input type="button" value="Next" id="NextButton" class="waves-effect waves-light btn-large">
 	</p>
 	<p id="Screen2" class="hidden">
 	<input type="button" value="Start" id="Button2" onclick="StartGame()"class="waves-effect waves-light btn-large">
