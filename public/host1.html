@@ -73,8 +73,8 @@
 						document.getElementById("Screen1").className = "hidden";
 						document.getElementById("dv1").className = "hidden";
 					}
-			});
-			
+			});//Instead of having the names go to waste, have it be "Name " + arrayFilledwithStuff for the teams ex: Mantra's Pirates, Chris's Spartans
+			   //For Bonus points, have it so that on the host screen you can see the players on each team. i+":Team" + Team Name
 			$('#NextButton').click(function(){
 				for(i=0;i<Team;i++)
 				{
@@ -82,7 +82,6 @@
 					document.getElementById("temp"+i).className = "hidden";
 					TeamPoints[i] = 0;
 				}
-				console.log(TeamPoints);
 				document.getElementById("Screen1").className = "hidden"
 				document.getElementById("dv1").className = "hidden"
 				document.getElementById("NextButton").className = "hidden";
@@ -97,21 +96,18 @@
 				socket.emit('Create Session', Data);	
 			});
 			
-			function StartGame()
-			{
+			$('#Button2').click(function(){
 				var data = {
 				code:UserCode
 				}
 				console.log(data);
 				socket.emit("Start Session", data);
-				document.getElementById("Button2").onclick = function(){CorrectReset()}
 				document.getElementById("Screen2").className = "hidden"
-				document.getElementById("Button2").value = "Right Answer"
 				UpdateScore();
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("display").innerHTML =""
 				document.getElementById("Screen4").className = "visible"
-			}
+			});
 				
 			function UpdateScore(){
 				var Output =  "";
@@ -123,14 +119,13 @@
 				}else{
 					for(i=1;i<=Team;i++)
 					{
-						Output += i+": Team " + CustomNameArray[i-1] + " have " +TeamPoints[i-1] + " points." + "<br>";
+						Output += "Team " + CustomNameArray[i-1] + " have " +TeamPoints[i-1] + " points." + "<br>";
 					}
 				}
 					document.getElementById("codeSpace").innerHTML = Output
 			}
 			
-			function CorrectReset()//hide stuff
-			{
+			$('#RightButton').click(function(){
 				TeamPoints[CurrentTeam-1]++;
 				UpdateScore();
 				document.getElementById("display").innerHTML = ""; 
@@ -144,11 +139,9 @@
 				socket.emit("Correct Reset", Data);
 				var BuzzSound = new Audio("Fake.mp3");
                 BuzzSound.play();
-				
-			}
+			});
 			
-			function WrongReset()
-			{
+			$('#Button3').click(function(){
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
@@ -160,17 +153,16 @@
 				socket.emit("Wrong Reset", Data);
 				var BuzzSound = new Audio("Price.mp3");
                 BuzzSound.play();
-			}
+			});
 			
-			function EndSession()
-			{
+			$('#EndButton').click(function(){
 				var data = {
 				code:UserCode
 				}
 				socket.emit("End Session", data);
 				socket.disconnect();
 				location.reload();
-			}
+			});
 			
 			function generate()
 			{
@@ -214,7 +206,6 @@
 					CurrentTeam = data.PlayerTeam;
 					document.getElementById("Useful").innerHTML = ""
 					document.getElementById("display").innerHTML = data.PlayerName +" from Team " + data.PlayerTeam + " buzzed in."; 
-					document.getElementById("Screen2").className = "visible";
 					document.getElementById("Screen3").className = "visible";
 					document.getElementById("Screen4").className = "hidden"
 					var BuzzSound = new Audio("buzz.mp3");
@@ -256,13 +247,14 @@
 	<input type="button" value="Next" id="NextButton" class="waves-effect waves-light btn-large">
 	</p>
 	<p id="Screen2" class="hidden">
-	<input type="button" value="Start" id="Button2" onclick="StartGame()"class="waves-effect waves-light btn-large">
+	<input type="button" value="Start" id="Button2" class="waves-effect waves-light btn-large">
 	</p>
 	<p id="Screen3" class="hidden">
-	<input type="button" id="Button3" value="Wrong Answer" onClick="WrongReset()"class="'waves-effect waves-light btn-large red lighten-1'">
+	<input type="button" id="RightButton" value="Right Answer" class="waves-effect waves-light btn-large">
+	<input type="button" id="Button3" value="Wrong Answer" class="'waves-effect waves-light btn-large red lighten-1'">
 	</p>
 	<p id="Screen4" class="hidden">
-	<input type="button" value="End Session" id="EndButton" onClick="EndSession()"class='waves-effect waves-light btn-large red lighten-1'>
+	<input type="button" value="End Session" id="EndButton" class='waves-effect waves-light btn-large red lighten-1'>
 	</p>
 	<p id="displayScreen" class="visible"></p>
 </html>
