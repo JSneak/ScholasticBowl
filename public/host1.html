@@ -38,6 +38,7 @@
 			var TeamPoints = [];
 			var CurrentTeam;
 			var CustomNameArray = [];
+			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class"]
 		
 			$('#Button1').click(function(){
 				Name = document.getElementById("Name").value;
@@ -48,10 +49,9 @@
 						{
 							alert("No");
 						}else{
-							Team = document.getElementById("NumOfTeams").value;
-							Name = document.getElementById("Name").value;
 								for(i=0;i<Team;i++)
 								{
+									CustomNameArray[i] = RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
 									TeamPoints[i] = 0;
 								}
 								console.log(TeamPoints);
@@ -109,12 +109,12 @@
 				document.getElementById("Screen4").className = "visible"
 			});
 				
-			function UpdateScore(){
+			function UpdateScore(){//Working on the Random Team Name Thing
 				var Output =  "";
 				if(CustomNameArray.length <= 0){
 					for(i=1;i<=Team;i++)
 					{
-						Output += "Team " + i + ": " + TeamPoints[i-1] + "<br>"
+						Output += i+": " + Name + "'s " + CustomNameArray[i-1]+": " + TeamPoints[i-1] + "<br>"
 					}
 				}else{
 					for(i=1;i<=Team;i++)
@@ -164,8 +164,7 @@
 				location.reload();
 			});
 			
-			function generate()
-			{
+			function generate(){
 					var count = $("#holder input").size();
 
 					if (Team > count) {
@@ -184,9 +183,7 @@
 						$("#holder input:gt(" + x + ")").remove();
 					}
 			}
-			
-
-			
+				
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
 			document.getElementById("codeSpace").innerHTML = UserCode + " <--- Session Code";
