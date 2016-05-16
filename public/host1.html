@@ -17,6 +17,12 @@
 		div.visible{
 			display: block;
 		}
+		input.hidden{
+			display: none;
+		}
+		input.visible{
+			display: block;
+		}
 		</style>
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.0.js"></script>
@@ -24,8 +30,8 @@
 		$(document).ready(function () {
 			var PlayersInLobby= 0;
 			var UserCode;
-			var socket = io.connect('/')
-			//var socket = io.connect('http://localhost:3000/')
+			//var socket = io.connect('/')
+			var socket = io.connect('http://localhost:3000/')
 			var Name 
 			var Team
 			var PermantOutput="";
@@ -73,14 +79,13 @@
 				for(i=0;i<Team;i++)
 				{
 					CustomNameArray[i] = document.getElementById("temp"+i).value;
-				}
-				for(i=0;i<Team;i++)
-				{
+					document.getElementById("temp"+i).className = "hidden";
 					TeamPoints[i] = 0;
 				}
 				console.log(TeamPoints);
 				document.getElementById("Screen1").className = "hidden"
 				document.getElementById("dv1").className = "hidden"
+				document.getElementById("NextButton").className = "hidden";
 				document.getElementById("Screen2").className = "visible"
 				document.getElementById("Useful").innerHTML = "People in Session";
 				var Data = {
@@ -107,49 +112,23 @@
 				document.getElementById("display").innerHTML =""
 				document.getElementById("Screen4").className = "visible"
 			}
-			
-			function UpdateTable(){
-				document.getElementById("Useful").innerHTML =""
-				if(CustomNameArray.length <= 0){
-					for(i=1;i<=Team;i++)
-					{
-						PermantOutput += "<th>Team"+ i + "</th>";
-					}
-					PermantOutput += "</tr>"
-					document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
-				}else{
-					for(i=1;i<=Team;i++)
-					{
-						PermantOutput += "<th>"+i+": Team"+ CustomNameArray[i] + "</th>";
-					}
-					PermantOutput += "</tr>"
-					document.getElementById("display").innerHTML = "<table><tr>"+PermantOutput+"<tr>"+"</table>";
-				}
-			}
-			
+				
 			function UpdateScore(){
 				var Output =  "";
+				if(CustomNameArray.length <= 0){
 					for(i=1;i<=Team;i++)
 					{
 						Output += "Team " + i + ": " + TeamPoints[i-1] + "<br>"
 					}
+				}else{
+					for(i=1;i<=Team;i++)
+					{
+						Output += i+": Team " + CustomNameArray[i-1] + " have " +TeamPoints[i-1] + " points." + "<br>";
+					}
+				}
 					document.getElementById("codeSpace").innerHTML = Output
 			}
 			
-			
-			socket.on("someone buzzed", function(data) {
-				if(UserCode == data.Code)
-				{
-					CurrentTeam = data.PlayerTeam;
-					document.getElementById("Useful").innerHTML = ""
-					document.getElementById("display").innerHTML = data.PlayerName +" from Team " + data.PlayerTeam + " buzzed in."; 
-					document.getElementById("Screen2").className = "visible";
-					document.getElementById("Screen3").className = "visible";
-					document.getElementById("Screen4").className = "hidden"
-					var BuzzSound = new Audio("buzz.mp3");
-					BuzzSound.play();
-				}
-			});
 			function CorrectReset()//hide stuff
 			{
 				TeamPoints[CurrentTeam-1]++;
@@ -195,16 +174,15 @@
 			
 			function generate()
 			{
-
 					var count = $("#holder input").size();
-					//Team = parseInt($("#NumOfTeams").val(), 10);
 
 					if (Team > count) {
 						for (i = count; i < Team; i++) {
 							var $ctrl = $('<input/>').attr({
 							type: 'text',
 							placeholder: 'Enter team name for team ' + (i+1),
-							id: 'temp' + i
+							id: 'temp' + i,
+							class: 'visible'
 						});
 						$("#inBetween").prepend($ctrl);
 						}
@@ -213,7 +191,6 @@
 						var x = Team - 1;
 						$("#holder input:gt(" + x + ")").remove();
 					}
-			
 			}
 			
 
@@ -228,6 +205,20 @@
 				{
 					PlayersInLobby++;
 					document.getElementById("display").innerHTML = data.List;
+				}
+			});
+			
+			socket.on("someone buzzed", function(data) {
+				if(UserCode == data.Code)
+				{
+					CurrentTeam = data.PlayerTeam;
+					document.getElementById("Useful").innerHTML = ""
+					document.getElementById("display").innerHTML = data.PlayerName +" from Team " + data.PlayerTeam + " buzzed in."; 
+					document.getElementById("Screen2").className = "visible";
+					document.getElementById("Screen3").className = "visible";
+					document.getElementById("Screen4").className = "hidden"
+					var BuzzSound = new Audio("buzz.mp3");
+					BuzzSound.play();
 				}
 			});
 });
