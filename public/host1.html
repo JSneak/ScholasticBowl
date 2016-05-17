@@ -39,20 +39,24 @@
 			var CurrentTeam;
 			var CustomNameArray = [];
 			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class","Legends","Plebians","Unluckys","Favorite Class?","Democrats","Scholars"]
-			var CustomState;
+			var CustomNameState;
+			var CustomPointState;
 			var PlayersIn = [];
 			var PlayersTeam = [];
+			var LosePointValue = 0;
+			var WinPointValue = 1;
 		
 			$('#Button1').click(function(){
 				Name = document.getElementById("Name").value;
 				Team = document.getElementById("NumOfTeams").value;
-				if(document.getElementById("cb").checked == false)
+				if(document.getElementById("cb").checked == false && document.getElementById("pv").checked == false)
 					{
 						if(document.getElementById("Name").value == "" || document.getElementById("NumOfTeams") == 0 || "")//the NumOfTeams part doesnt work
 						{
 							alert("No");
 						}else{
-								CustomState = false;
+								CustomNameState = false;
+								CustomPointState = false;
 								for(i=0;i<Team;i++)
 								{
 									CustomNameArray[i] = Name + "'s "+RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
@@ -73,20 +77,58 @@
 								socket.emit('Create Session', Data);	
 						}
 					}else{
-						CustomState = true;
-						generate();
+						if(document.getElementById("pv").checked == true && document.getElementById("cb").checked == false)
+						{	
+							CustomPointState = true;
+							CustomNameState = false;
+							document.getElementById("WPV").className = "visible";
+							document.getElementById("LPV").className = "visible";
+						}else if(document.getElementById("pv").checked == true && document.getElementById("cb").checked == true)
+						{
+							CustomPointState = false;
+							CustomNameState = true;
+							document.getElementById("WPV").className = "visible";
+							document.getElementById("LPV").className = "visible";
+							generate();
+						}else{
+							CustomPointState = false;
+							CustomNameState = true;
+							generate();
+						}
 						document.getElementById("inBetween").className = "visible";
 						document.getElementById("Screen1").className = "hidden";
 						document.getElementById("dv1").className = "hidden";
+						document.getElementById("dv2").className = "hidden";
 					}
 			});
-			   //For Bonus points, have it so that on the host screen you can see the players on each team. i+":Team" + Team Name
+			
 			$('#NextButton').click(function(){
-				for(i=0;i<Team;i++)
+				if(CustomNameState == true){
+					for(i=0;i<Team;i++)
+					{
+						if(document.getElementById("temp"+i).value == "" || 0)
+						{
+							alert("Please fill out all the team names");
+							return;
+						}else{
+						CustomNameArray[i] = document.getElementById("temp"+i).value;
+						document.getElementById("temp"+i).className = "hidden";
+						TeamPoints[i] = 0;
+						}
+					}
+				}
+				if(CustomPointState == true)
 				{
-					CustomNameArray[i] = document.getElementById("temp"+i).value;
-					document.getElementById("temp"+i).className = "hidden";
-					TeamPoints[i] = 0;
+					if(document.getElementById("WPV").value || document.getElementById("LPV").value == "")//Doesn't Work Figure out how to check number inputes
+					{
+						alert("Please enter numbers for the point values");
+						return;
+					}else{
+					WinPointValue = document.getElementById("WPV").value;
+					LosePointValue = document.getElementById("LPV").value;
+					document.getElementById("WPV").className = "hidden";
+					document.getElementById("LPV").className = "hidden";
+					}
 				}
 				document.getElementById("Screen1").className = "hidden"
 				document.getElementById("dv1").className = "hidden"
@@ -116,7 +158,7 @@
 			});
 			
 			$('#RightButton').click(function(){
-				TeamPoints[CurrentTeam-1]++;
+				TeamPoints[CurrentTeam-1] + WinPointValue;
 				UpdateScore();
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
@@ -132,6 +174,7 @@
 			});
 			
 			$('#WrongButton').click(function(){
+				TeamPoints[CurrentTeam-1] - LosePointValue;
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
@@ -176,7 +219,7 @@
 			
 			function UpdateScore(){//Working on the Random Team Name Thing
 				var Output =  "";
-				if(CustomState == false){
+				if(CustomNameState == false){
 					for(i=1;i<=Team;i++)
 					{
 						Output += i+": " + CustomNameArray[i-1]+": " + TeamPoints[i-1] + "<br>"
@@ -190,8 +233,7 @@
 					document.getElementById("codeSpace").innerHTML = Output
 			}
 				
-			function UpdateWait()
-			{
+			function UpdateWait(){
 				var Output = "";
 				var Temp = "";
 				for(i=1;i<=Team;i++)
@@ -268,10 +310,21 @@
 			<span class="lever"></span>
 			<font size="4.5">On</font>
 		</label><br><br>
+	  </div>
+	  <div class="switch" id="dv2" class="visible">
+	  <font size="4.5">Do you want Custom Point Values?</font><br>
+		<label>
+			<font size="4.5">Off</font>
+			<input id="pv" type="checkbox">
+			<span class="lever"></span>
+			<font size="4.5">On</font>
+		</label><br><br>
 		<input type="button" value="Make Session" id="Button1" class="waves-effect waves-light btn-large"> <br>
 	</div>
 	</p>
 	<p id="inBetween" class="hidden">
+	<input type="number" id="WPV" placeholder="How many points gained per correct answer?" class="hidden">
+	<input type="number" id="LPV" placeholder="How many points lost per wrong answer?" class="hidden">
 	<input type="button" value="Next" id="NextButton" class="waves-effect waves-light btn-large">
 	</p>
 	<p id="Screen2" class="hidden">
