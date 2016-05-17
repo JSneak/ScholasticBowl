@@ -38,8 +38,10 @@
 			var TeamPoints = [];
 			var CurrentTeam;
 			var CustomNameArray = [];
-			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class","Legends","Plebians","Unluckys","Favorite Class?"]
+			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class","Legends","Plebians","Unluckys","Favorite Class?","Democrats","Scholars"]
 			var CustomState;
+			var PlayersIn = [];
+			var PlayersTeam = [];
 		
 			$('#Button1').click(function(){
 				Name = document.getElementById("Name").value;
@@ -53,7 +55,7 @@
 								CustomState = false;
 								for(i=0;i<Team;i++)
 								{
-									CustomNameArray[i] = RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
+									CustomNameArray[i] = Name + "'s "+RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
 									//They might repeat, to lazy to write right now
 									TeamPoints[i] = 0;
 								}
@@ -61,7 +63,7 @@
 								document.getElementById("Screen1").className = "hidden"
 								document.getElementById("dv1").className = "hidden"
 								document.getElementById("Screen2").className = "visible"
-								document.getElementById("Useful").innerHTML = "People in Session";
+								UpdateWait();
 								var Data = {
 									hostName: Name,
 									hostTeam: Team
@@ -77,7 +79,7 @@
 						document.getElementById("Screen1").className = "hidden";
 						document.getElementById("dv1").className = "hidden";
 					}
-			});//Instead of having the names go to waste, have it be "Name " + arrayFilledwithStuff for the teams ex: Mantra's Pirates, Chris's Spartans
+			});
 			   //For Bonus points, have it so that on the host screen you can see the players on each team. i+":Team" + Team Name
 			$('#NextButton').click(function(){
 				for(i=0;i<Team;i++)
@@ -90,7 +92,7 @@
 				document.getElementById("dv1").className = "hidden"
 				document.getElementById("NextButton").className = "hidden";
 				document.getElementById("Screen2").className = "visible"
-				document.getElementById("Useful").innerHTML = "People in Session";
+				UpdateWait();
 				var Data = {
 					hostName: Name,
 					hostTeam: Team
@@ -112,22 +114,6 @@
 				document.getElementById("display").innerHTML =""
 				document.getElementById("Screen4").className = "visible"
 			});
-				
-			function UpdateScore(){//Working on the Random Team Name Thing
-				var Output =  "";
-				if(CustomState == false){
-					for(i=1;i<=Team;i++)
-					{
-						Output += i+": " + Name + "'s " + CustomNameArray[i-1]+": " + TeamPoints[i-1] + "<br>"
-					}
-				}else{
-					for(i=1;i<=Team;i++)
-					{
-						Output += "Team " + CustomNameArray[i-1] + " have " +TeamPoints[i-1] + " points." + "<br>";
-					}
-				}
-					document.getElementById("codeSpace").innerHTML = Output
-			}
 			
 			$('#RightButton').click(function(){
 				TeamPoints[CurrentTeam-1]++;
@@ -187,6 +173,45 @@
 						$("#holder input:gt(" + x + ")").remove();
 					}
 			}
+			
+			function UpdateScore(){//Working on the Random Team Name Thing
+				var Output =  "";
+				if(CustomState == false){
+					for(i=1;i<=Team;i++)
+					{
+						Output += i+": " + CustomNameArray[i-1]+": " + TeamPoints[i-1] + "<br>"
+					}
+				}else{
+					for(i=1;i<=Team;i++)
+					{
+						Output += "Team " + CustomNameArray[i-1] + " have " +TeamPoints[i-1] + " points." + "<br>";
+					}
+				}
+					document.getElementById("codeSpace").innerHTML = Output
+			}
+				
+			function UpdateWait()
+			{
+				var Output = "";
+				var Temp = "";
+				for(i=1;i<=Team;i++)
+				{
+					Temp = ""
+					console.log(PlayersInLobby);
+					for(x=0;x<PlayersInLobby;x++)//Has a comma sticking out at the end
+					{
+					console.log(PlayersTeam);
+					console.log(x);
+						if(PlayersTeam[x] == i)
+						{
+							console.log(PlayersIn);
+							Temp += PlayersIn[x]+", "
+						}
+					}
+				Output += i+": " + CustomNameArray[i-1]+": "+ Temp + "<br>"
+				}
+				document.getElementById("Useful").innerHTML = Output;
+			}			
 				
 			socket.on('recieve code',function (data) {
 			UserCode = data.Code;
@@ -197,7 +222,9 @@
 				if(UserCode == data.Code)
 				{
 					PlayersInLobby++;
-					document.getElementById("display").innerHTML = data.List;
+					PlayersIn = data.List;
+					PlayersTeam = data.Team;
+					UpdateWait();
 				}
 			});
 			

@@ -38,6 +38,7 @@ socket.on("join session", function(Code){//Checks the code
 		var GivenCode = Code.dataCode;
 		var GivenTeam = Code.dataTeam;
 		var GroupList = [];
+		var GroupListTeam = [];
 		for(i=0;i<NumberOfGuests;i++)
 		{
 			if(usernames[i]['code'] == GivenCode && usernames[i]['rank'] == "Host")
@@ -64,15 +65,18 @@ socket.on("join session", function(Code){//Checks the code
 									if(usernames[j]['rank'] != "Host")
 									{
 										GroupList.push(usernames[j]['userName']);
+										GroupListTeam.push(usernames[j]['team']);
 									}
 								}
 							}
+				console.log(GroupListTeam);
 				socket.emit('user recieve code', {
 					Code: GivenCode
 				});//returns back to the caller
 				io.sockets.emit('displayName', {
 					Code:GivenCode,
-					List:GroupList
+					List:GroupList,
+					Team:GroupListTeam
 				});//returns to everyone
 						}
 					}
