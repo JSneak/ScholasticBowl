@@ -38,7 +38,8 @@
 			var TeamPoints = [];
 			var CurrentTeam;
 			var CustomNameArray = [];
-			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class"]
+			var RandomTeamNames = ["Pirates", "Spartans", "Templars", "Gymnasts", "Favorite Class","Legends","Plebians","Unluckys","Favorite Class?"]
+			var CustomState;
 		
 			$('#Button1').click(function(){
 				Name = document.getElementById("Name").value;
@@ -49,9 +50,11 @@
 						{
 							alert("No");
 						}else{
+								CustomState = false;
 								for(i=0;i<Team;i++)
 								{
 									CustomNameArray[i] = RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
+									//They might repeat, to lazy to write right now
 									TeamPoints[i] = 0;
 								}
 								console.log(TeamPoints);
@@ -68,6 +71,7 @@
 								socket.emit('Create Session', Data);	
 						}
 					}else{
+						CustomState = true;
 						generate();
 						document.getElementById("inBetween").className = "visible";
 						document.getElementById("Screen1").className = "hidden";
@@ -111,7 +115,7 @@
 				
 			function UpdateScore(){//Working on the Random Team Name Thing
 				var Output =  "";
-				if(CustomNameArray.length <= 0){
+				if(CustomState == false){
 					for(i=1;i<=Team;i++)
 					{
 						Output += i+": " + Name + "'s " + CustomNameArray[i-1]+": " + TeamPoints[i-1] + "<br>"
