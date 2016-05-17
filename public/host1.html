@@ -131,7 +131,7 @@
                 BuzzSound.play();
 			});
 			
-			$('#Button3').click(function(){
+			$('#WrongButton').click(function(){
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
@@ -279,7 +279,7 @@
 	</p>
 	<p id="Screen3" class="hidden">
 	<input type="button" id="RightButton" value="Right Answer" class="waves-effect waves-light btn-large">
-	<input type="button" id="Button3" value="Wrong Answer" class="'waves-effect waves-light btn-large red lighten-1'">
+	<input type="button" id="WrongButton" value="Wrong Answer" class="'waves-effect waves-light btn-large red lighten-1'">
 	</p>
 	<p id="Screen4" class="hidden">
 	<input type="button" value="End Session" id="EndButton" class='waves-effect waves-light btn-large red lighten-1'>
