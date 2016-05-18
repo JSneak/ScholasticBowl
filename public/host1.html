@@ -4,6 +4,7 @@
 		<title>Host A New Session</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="animate.css">
 		<style>
         p.hidden{
             display: none;
@@ -30,8 +31,8 @@
 		$(document).ready(function () {
 			var PlayersInLobby= 0;
 			var UserCode;
-			//var socket = io.connect('/')
-			var socket = io.connect('http://localhost:3000/')
+			var socket = io.connect('/')
+			//var socket = io.connect('http://localhost:3000/')
 			var Name 
 			var Team
 			var PermantOutput="";
@@ -63,7 +64,6 @@
 									//They might repeat, to lazy to write right now
 									TeamPoints[i] = 0;
 								}
-								console.log(TeamPoints);
 								document.getElementById("Screen1").className = "hidden"
 								document.getElementById("dv1").className = "hidden"
 								document.getElementById("dv2").className = "hidden"
@@ -126,15 +126,13 @@
 				}
 				if(CustomPointState == true)
 				{
-					if(document.getElementById("WPV").value == ""|| document.getElementById("LPV").value == "")//Doesn't Work Figure out how to check number inputes
+					if(document.getElementById("WPV").value == ""|| document.getElementById("LPV").value == "")
 					{
 						alert("Please enter numbers for the point values");
 						return;
 					}else{
 					WinPointValue = document.getElementById("WPV").valueAsNumber;
 					LosePointValue = document.getElementById("LPV").valueAsNumber;
-					console.log(WinPointValue);
-					console.log(LosePointValue);
 					}
 				}
 				document.getElementById("Screen1").className = "hidden"
@@ -158,7 +156,6 @@
 				var data = {
 				code:UserCode
 				}
-				console.log(data);
 				socket.emit("Start Session", data);
 				document.getElementById("Screen2").className = "hidden"
 				UpdateScore();
@@ -228,7 +225,7 @@
 					}
 			}
 			
-			function UpdateScore(){//Working on the Random Team Name Thing
+			function UpdateScore(){
 				var Output =  "";
 				if(CustomNameState == false){
 					for(i=1;i<=Team;i++)
@@ -250,14 +247,10 @@
 				for(i=1;i<=Team;i++)
 				{
 					Temp = ""
-					console.log(PlayersInLobby);
 					for(x=0;x<PlayersInLobby;x++)//Has a comma sticking out at the end
 					{
-					console.log(PlayersTeam);
-					console.log(x);
 						if(PlayersTeam[x] == i)
 						{
-							console.log(PlayersIn);
 							Temp += PlayersIn[x]+", "
 						}
 					}
@@ -294,6 +287,7 @@
 				}
 			});
 });
+//http://stackoverflow.com/questions/5482677/how-to-apply-two-css-classes-to-a-single-div-span
 //http://stackoverflow.com/questions/8288046/javascript-function-does-not-work-within-jquery-document-ready-block
 //http://stackoverflow.com/questions/12627443/jquery-click-vs-onclick
 //http://jsfiddle.net/Zsmkn/4/
