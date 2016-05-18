@@ -66,6 +66,7 @@
 								console.log(TeamPoints);
 								document.getElementById("Screen1").className = "hidden"
 								document.getElementById("dv1").className = "hidden"
+								document.getElementById("dv2").className = "hidden"
 								document.getElementById("Screen2").className = "visible"
 								UpdateWait();
 								var Data = {
@@ -79,6 +80,12 @@
 					}else{
 						if(document.getElementById("pv").checked == true && document.getElementById("cb").checked == false)
 						{	
+							for(i=0;i<Team;i++)
+							{
+								CustomNameArray[i] = Name + "'s "+RandomTeamNames[Math.floor((Math.random() * RandomTeamNames.length))];
+								//They might repeat, to lazy to write right now
+								TeamPoints[i] = 0;
+							}
 							CustomPointState = true;
 							CustomNameState = false;
 							document.getElementById("WPV").className = "visible";
@@ -119,19 +126,22 @@
 				}
 				if(CustomPointState == true)
 				{
-					if(document.getElementById("WPV").value || document.getElementById("LPV").value == "")//Doesn't Work Figure out how to check number inputes
+					if(document.getElementById("WPV").value == ""|| document.getElementById("LPV").value == "")//Doesn't Work Figure out how to check number inputes
 					{
 						alert("Please enter numbers for the point values");
 						return;
 					}else{
-					WinPointValue = document.getElementById("WPV").value;
-					LosePointValue = document.getElementById("LPV").value;
-					document.getElementById("WPV").className = "hidden";
-					document.getElementById("LPV").className = "hidden";
+					WinPointValue = document.getElementById("WPV").valueAsNumber;
+					LosePointValue = document.getElementById("LPV").valueAsNumber;
+					console.log(WinPointValue);
+					console.log(LosePointValue);
 					}
 				}
 				document.getElementById("Screen1").className = "hidden"
 				document.getElementById("dv1").className = "hidden"
+				document.getElementById("dv2").className = "hidden"
+				document.getElementById("WPV").className = "hidden";
+				document.getElementById("LPV").className = "hidden";
 				document.getElementById("NextButton").className = "hidden";
 				document.getElementById("Screen2").className = "visible"
 				UpdateWait();
@@ -158,7 +168,7 @@
 			});
 			
 			$('#RightButton').click(function(){
-				TeamPoints[CurrentTeam-1] + WinPointValue;
+				TeamPoints[CurrentTeam-1] = TeamPoints[CurrentTeam-1] + WinPointValue;
 				UpdateScore();
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
@@ -174,7 +184,8 @@
 			});
 			
 			$('#WrongButton').click(function(){
-				TeamPoints[CurrentTeam-1] - LosePointValue;
+				TeamPoints[CurrentTeam-1] = TeamPoints[CurrentTeam-1] - LosePointValue;
+				UpdateScore();
 				document.getElementById("display").innerHTML = ""; 
 				document.getElementById("Useful").innerHTML ="Waiting for someone to buzz..."
 				document.getElementById("Screen2").className = "hidden"
